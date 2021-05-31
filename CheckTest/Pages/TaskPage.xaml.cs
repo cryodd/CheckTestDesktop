@@ -12,24 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestCheck.ViewModels;
 
 namespace CheckTest.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для Auth.xaml
+    /// Логика взаимодействия для TaskPage.xaml
     /// </summary>
-    public partial class Auth : Page
+    public partial class TaskPage : Page
     {
-        public Auth()
+        public TaskPage()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var a = new ViewModels.Compiler();
-            a.Compile("1");
-            this.NavigationService.Navigate(new TaskPage());
+            FGG.ItemsSource = TasksAPI.GetTasksList();
         }
     }
 }

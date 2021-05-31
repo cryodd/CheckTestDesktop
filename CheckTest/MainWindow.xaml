@@ -16,7 +16,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
        
-        <Frame Grid.Row="1" x:Name="frame">
+        <Frame Grid.Row="1" x:Name="MainFrame">
             
         </Frame>
     </Grid>

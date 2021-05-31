@@ -23,7 +23,7 @@ namespace CheckTest
         public MainWindow()
         {
             InitializeComponent();
-            frame.Navigate(new Pages.Auth());
+            MainFrame.Navigate(new Pages.Auth());
         }
 
         
