@@ -9,7 +9,9 @@
       Title="TaskPage" Background="Linen">
     
     <Grid>
-        <DataGrid x:Name="FGG">
-        </DataGrid>
+        <ScrollViewer>
+            <StackPanel x:Name="FGG">
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

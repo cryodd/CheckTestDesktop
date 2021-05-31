@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
-using TestCheck.Models;
+using CheckTest.Models;
 
-namespace TestCheck.ViewModels
+namespace CheckTest.ViewModels
 {
     public class TasksAPI
     {
@@ -19,6 +19,7 @@ namespace TestCheck.ViewModels
                 return answer.Data;
             }
         }
+        
         public bool PostTask(string nametask, string desctask)
         {
             using (var client = new HttpClient())

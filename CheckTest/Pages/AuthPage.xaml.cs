@@ -18,17 +18,16 @@ namespace CheckTest.Pages
     /// <summary>
     /// Логика взаимодействия для Auth.xaml
     /// </summary>
-    public partial class Auth : Page
+    public partial class AuthPage : Page
     {
-        public Auth()
+        public AuthPage()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var a = new ViewModels.Compiler();
-            a.Compile("1");
+            
             this.NavigationService.Navigate(new TaskPage());
         }
     }

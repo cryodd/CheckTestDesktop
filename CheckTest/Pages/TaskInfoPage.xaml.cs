@@ -12,20 +12,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CheckTest.ViewModels;
 
-namespace CheckTest
+
+namespace CheckTest.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для TaskInfoPage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TaskInfoPage : Page
     {
-        public MainWindow()
+        public TaskInfoPage(int id)
         {
             InitializeComponent();
-            MainFrame.Navigate(new Pages.AuthPage());
-        }
 
-        
+            var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
+            name.Text = item.NameTask;
+            desc.Text = item.DescribeTask;
+        }
     }
 }

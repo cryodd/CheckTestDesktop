@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
-using TestCheck.Models;
+using CheckTest.Models;
 
-namespace TestCheck.API
+namespace CheckTest.API
 {
     public class AuthAPI
     {
