@@ -16,6 +16,7 @@ using CheckTest.ViewModels;
 using Microsoft.Win32;
 using System.IO;
 
+
 namespace CheckTest.Pages
 {
     /// <summary>
@@ -23,10 +24,11 @@ namespace CheckTest.Pages
     /// </summary>
     public partial class TaskInfoPage : Page
     {
+        int id;
         public TaskInfoPage(int id)
         {
             InitializeComponent();
-
+            this.id = id;
             var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
@@ -39,6 +41,18 @@ namespace CheckTest.Pages
             {
                 string path = openFileDialog.FileName;
                 NameFile.Text = path;
+                StreamReader streamReader = new StreamReader(path);
+                programText.Text = streamReader.ReadToEnd();
+                SendButton.IsEnabled = true;
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Compiler compiler = new Compiler();
+            foreach(var item in compiler.Compile(programText.Text,id))
+            {
+                Console.WriteLine(item);
             }
         }
     }

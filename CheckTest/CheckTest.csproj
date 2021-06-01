@@ -71,6 +71,7 @@
     <Compile Include="ViewModels\Compiler.cs" />
     <Compile Include="ViewModels\Guy.cs" />
     <Compile Include="ViewModels\TasksAPI.cs" />
+    <Compile Include="ViewModels\TestTask.cs" />
     <Page Include="MainDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

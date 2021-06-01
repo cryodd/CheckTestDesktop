@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:CheckTest.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Auth" Background="Linen">
+      Title="Auth" Background="Linen" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,13 +17,14 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="1" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center">Авторизация</TextBlock>
+        <TextBlock Grid.Row="1" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="text1">Авторизация</TextBlock>
         <TextBox Grid.Row="2" x:Name="EmailText"></TextBox>
         <PasswordBox Grid.Row="3" x:Name="PassText"></PasswordBox>
-        <WrapPanel Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <WrapPanel Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="text2">
             <Button Margin="0 0 50 0" Click="Button_Click">Войти</Button>
             <Button>Регистрация</Button>
         </WrapPanel>
         <TextBlock x:Name="ErrorText" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"></TextBlock>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Visibility="Hidden" x:Name="text3">Вы уже вошли</TextBlock>
     </Grid>
 </Page>

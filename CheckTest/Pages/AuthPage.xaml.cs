@@ -24,6 +24,7 @@ namespace CheckTest.Pages
         public AuthPage()
         {
             InitializeComponent();
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -47,6 +48,26 @@ namespace CheckTest.Pages
                 {
                     ErrorText.Text = "Не верно введен логин или пароль";
                 }
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Guy.CurrentUser != null)
+            {
+                text1.Visibility = Visibility.Hidden;
+                EmailText.Visibility = Visibility.Hidden;
+                PassText.Visibility = Visibility.Hidden;
+                text2.Visibility = Visibility.Hidden;
+                text3.Visibility = Visibility;
+            }
+            else
+            {
+                text1.Visibility = Visibility;
+                EmailText.Visibility = Visibility;
+                PassText.Visibility = Visibility;
+                text2.Visibility = Visibility;
+                text3.Visibility = Visibility.Hidden;
             }
         }
     }

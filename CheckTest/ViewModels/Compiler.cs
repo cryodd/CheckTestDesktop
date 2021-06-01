@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
+using System.IO;
 
 namespace CheckTest.ViewModels
 {
     class Compiler
     {
-        public CompilerErrorCollection Compile(string text1)
+        const string path = "comp/Compiler.exe";
+        public CompilerErrorCollection Compile(string text2,int IdTask)
         {
+            
             string text = @"using System;
 namespace HelloWorld
     {
@@ -22,13 +25,30 @@ namespace HelloWorld
         {
             static void Main(string[] args)
             {
+int a;
+for(int i=1;i<6;i++){
+a = Convert.ToInt32(Console.ReadLine());
+a*=a;
+Console.WriteLine(a);
+
+};
                 
+                
+
             }
         }
-    }";
+    }"; 
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            
             CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-            ICodeCompiler icc = codeProvider.CreateCompiler();
-            var result = icc.CompileAssemblyFromSource(new CompilerParameters(), text);
+            var cp = new CompilerParameters();
+            cp.GenerateExecutable = true;
+            cp.OutputAssembly = path;
+            var result = codeProvider.CompileAssemblyFromSource(cp, text);
+            TestTask tests = new TestTask(IdTask, path);
             return result.Errors;
         }
     }
