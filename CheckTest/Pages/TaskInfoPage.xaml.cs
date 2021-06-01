@@ -13,7 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CheckTest.ViewModels;
-
+using Microsoft.Win32;
+using System.IO;
 
 namespace CheckTest.Pages
 {
@@ -29,6 +30,16 @@ namespace CheckTest.Pages
             var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string path = openFileDialog.FileName;
+                NameFile.Text = path;
+            }
         }
     }
 }

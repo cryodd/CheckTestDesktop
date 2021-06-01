@@ -10,17 +10,24 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="name" FontSize="32" HorizontalAlignment="Center">test</TextBlock>
-        <TextBlock x:Name="desc" FontSize="32" Grid.Row="1">test2</TextBlock>
+        <TextBlock x:Name="name" FontSize="25" HorizontalAlignment="Center" FontWeight="Bold" Foreground="Brown" TextWrapping="Wrap"></TextBlock>
+        <TextBlock x:Name="desc" FontSize="18" Grid.Row="1" FontStyle="Italic" FontWeight="Bold" Foreground="SaddleBrown" TextWrapping="Wrap"></TextBlock>
         <ScrollViewer Grid.Row="2">
             <TextBlock FontSize="20">
                 test3
             </TextBlock>
         </ScrollViewer>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="Выбрать файл" Click="Button_Click"></Button>
+            <TextBlock x:Name="NameFile" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap"></TextBlock>
+        </StackPanel>
+        <Button Grid.Row="4" HorizontalAlignment="Left" Content="Отправить"></Button>
     </Grid>
 </Page>

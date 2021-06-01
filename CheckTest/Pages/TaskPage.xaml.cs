@@ -31,7 +31,13 @@ namespace CheckTest.Pages
                 {
                     Text = "№ "+ item.IdTask + ". " + item.NameTask,
                     FontSize = 28,
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness
+                    {
+                        Top = 20,
+                        Bottom = 20
+                    }
                 });
                 FGG.Children.Add(new TextBlock()
                 {
@@ -46,12 +52,20 @@ namespace CheckTest.Pages
                 var but = new Button()
                 {
                     Content = "Перейти к заданию",
-                    Width = 150,
-                    Height = 50,
                     Uid = item.IdTask.ToString()
                 };
                 but.Click += but_click;
                 FGG.Children.Add(but);
+                FGG.Children.Add(new Line()
+                {
+                    X1 = 10,
+                    X2 = 800,
+                    Y1 = 30,
+                    Y2 = 30,
+                    Stroke = Brushes.Gray,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
             }
             void but_click(object sender, RoutedEventArgs e)
             {

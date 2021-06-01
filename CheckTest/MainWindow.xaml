@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CheckTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="#006064">
+        Title="Алгоритмизация" MinHeight="1000" MinWidth="800" MaxHeight="1000" MaxWidth="1000" Background="#006064">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>

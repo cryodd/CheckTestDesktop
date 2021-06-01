@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckTest.API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,8 +28,26 @@ namespace CheckTest.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-            this.NavigationService.Navigate(new TaskPage());
+
+            string login = EmailText.Text;
+            string password = PassText.Password;
+            AuthAPI obj = new AuthAPI();
+            if (obj.GetAuth(login, password))
+            {
+                this.NavigationService.Navigate(new TaskPage());
+                ErrorText.Text = "";
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+                {
+                    ErrorText.Text = "Не введен логин или пароль";
+                }
+                else
+                {
+                    ErrorText.Text = "Не верно введен логин или пароль";
+                }
+            }
         }
     }
 }
