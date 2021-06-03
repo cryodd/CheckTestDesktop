@@ -42,13 +42,20 @@ Console.WriteLine(a);
             {
                 File.Delete(path);
             }
-            
             CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-            var cp = new CompilerParameters();
-            cp.GenerateExecutable = true;
-            cp.OutputAssembly = path;
+            var cp = new CompilerParameters
+            {
+                GenerateExecutable = true,
+                OutputAssembly = path
+            };
             var result = codeProvider.CompileAssemblyFromSource(cp, text);
+            
             TestTask tests = new TestTask(IdTask, path);
+            Console.WriteLine(tests.Check());
+            if (tests.Check() != 2)
+            {
+
+            }
             return result.Errors;
         }
     }
