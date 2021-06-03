@@ -37,6 +37,7 @@ namespace CheckTest.Pages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Файлы (*.txt, *.cs) | *.txt; *.cs;";
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
@@ -53,6 +54,76 @@ namespace CheckTest.Pages
             foreach(var item in compiler.Compile(programText.Text,id))
             {
                 Console.WriteLine(item);
+            }
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !(Char.IsDigit(e.Text, 0));
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(NumberText.Text))
+            {
+                Console.WriteLine(" ");
+            }
+            else
+            {
+                int a = Convert.ToInt32(NumberText.Text);
+                for (int i = 0; i < a; i++)
+                {
+                    AdmTestAdd.Children.Add(new TextBlock()
+                    {
+                        Text = "Ввод",
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        FontSize = 15
+                    });
+                    AdmTestAdd.Children.Add(new TextBox()
+                    {
+                        Height = 200,
+                        Width = 200,
+                        Margin = new Thickness
+                        {
+                            Top = 10
+                        },
+                        Background = Brushes.White,
+                        TextWrapping = TextWrapping.Wrap,
+                        AcceptsReturn = true,
+                        FontSize = 15
+                    });
+                    AdmTestAdd.Children.Add(new TextBlock()
+                    {
+                        Text = "Вывод",
+                        VerticalAlignment = VerticalAlignment.Center,
+                        FontSize = 15,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    });
+                    AdmTestAdd.Children.Add(new TextBox()
+                    {
+                        Height = 200,
+                        Width = 200,
+                        Margin = new Thickness
+                        {
+                            Top = 10
+                        },
+                        Background = Brushes.White,
+                        TextWrapping = TextWrapping.Wrap,
+                        AcceptsReturn = true,
+                        FontSize = 15
+                    });
+                    AdmTestAdd.Children.Add(new Line()
+                    {
+                        X1 = 10,
+                        X2 = 800,
+                        Y1 = 30,
+                        Y2 = 30,
+                        Stroke = Brushes.Gray,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    });
+                }
             }
         }
     }
