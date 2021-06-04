@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ using System.Windows.Shapes;
 using CheckTest.ViewModels;
 using Microsoft.Win32;
 using System.IO;
-
+using CheckTest.API;
 
 namespace CheckTest.Pages
 {
@@ -25,6 +26,7 @@ namespace CheckTest.Pages
     public partial class TaskInfoPage : Page
     {
         int id;
+        Visibility hide = Visibility.Hidden;
         public TaskInfoPage(int id)
         {
             InitializeComponent();
@@ -32,6 +34,20 @@ namespace CheckTest.Pages
             var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
+            //if (Guy.CurrentUser == null) 
+            //{
+            //    hide1.Visibility = hide;
+            //    hide2.Visibility = hide;
+            //}
+            //else
+            //{
+            //    if (Guy.CurrentUser.First().Access != 1)
+            //    {
+            //        hide1.Visibility = hide;
+            //        hide2.Visibility = hide;
+            //    }
+            //}
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -70,17 +86,28 @@ namespace CheckTest.Pages
             }
             else
             {
+                AdmTestAdd.Children.Clear();
+                TestSaveButton.IsEnabled = true;
                 int a = Convert.ToInt32(NumberText.Text);
                 for (int i = 0; i < a; i++)
                 {
-                    AdmTestAdd.Children.Add(new TextBlock()
+                    WrapPanel panel = new WrapPanel();
+                    StackPanel stackPanel = new StackPanel()
+                    {
+                        Margin = new Thickness()
+                        {
+                            Right = 20 
+                        }
+                    };
+                    StackPanel stackPanel1 = new StackPanel();
+                    stackPanel.Children.Add(new TextBlock()
                     {
                         Text = "Ввод",
                         VerticalAlignment = VerticalAlignment.Center,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         FontSize = 15
                     });
-                    AdmTestAdd.Children.Add(new TextBox()
+                    stackPanel.Children.Add(new TextBox()
                     {
                         Height = 200,
                         Width = 200,
@@ -91,16 +118,17 @@ namespace CheckTest.Pages
                         Background = Brushes.White,
                         TextWrapping = TextWrapping.Wrap,
                         AcceptsReturn = true,
-                        FontSize = 15
+                        FontSize = 15,
+                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto
                     });
-                    AdmTestAdd.Children.Add(new TextBlock()
+                    stackPanel1.Children.Add(new TextBlock()
                     {
                         Text = "Вывод",
                         VerticalAlignment = VerticalAlignment.Center,
                         FontSize = 15,
                         HorizontalAlignment = HorizontalAlignment.Center
                     });
-                    AdmTestAdd.Children.Add(new TextBox()
+                    stackPanel1.Children.Add(new TextBox()
                     {
                         Height = 200,
                         Width = 200,
@@ -113,6 +141,10 @@ namespace CheckTest.Pages
                         AcceptsReturn = true,
                         FontSize = 15
                     });
+                    panel.Children.Add(stackPanel);
+                    panel.Children.Add(stackPanel1);
+                    AdmTestAdd.Children.Add(panel);
+
                     AdmTestAdd.Children.Add(new Line()
                     {
                         X1 = 10,
@@ -124,6 +156,25 @@ namespace CheckTest.Pages
                         VerticalAlignment = VerticalAlignment.Center
                     });
                 }
+            }
+        }
+
+        private void TestSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            TestTaskAPI testTask = new TestTaskAPI();
+
+            for (int i = 0; i < AdmTestAdd.Children.Count; i += 2)
+            {
+                var Panel = (WrapPanel)AdmTestAdd.Children[i];
+                var InputPanel = (StackPanel)Panel.Children[0];
+                var OutputPanel = (StackPanel)Panel.Children[1];
+                var InputTextBox = (TextBox)InputPanel.Children[1];
+                var OutputTextBox = (TextBox)OutputPanel.Children[1];
+                byte[] vs = Encoding.UTF8.GetBytes(InputTextBox.Text);
+                byte[] vs1 = Encoding.UTF8.GetBytes(OutputTextBox.Text);
+                
+                    Console.WriteLine(testTask.PostTestByIdTask(1, vs, vs1).ToString());
+                
             }
         }
     }

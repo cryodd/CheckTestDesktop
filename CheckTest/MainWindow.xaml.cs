@@ -26,7 +26,6 @@ namespace CheckTest
             InitializeComponent();
             MainFrame.Navigate(new Pages.TaskInfoPage(1));
             
-            
         }
 
         private void MainFrame_ContentRendered(object sender, EventArgs e)

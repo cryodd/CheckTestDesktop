@@ -28,13 +28,13 @@
             <TextBlock FontSize="10" x:Name="programText" Background="AntiqueWhite">
             </TextBlock>
         </ScrollViewer>
-        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-            <Button Content="Добавить тест(ы)" Margin="10,0,0,0" Click="Button_Click_2" Width="100" FontSize="12"></Button>
+        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" x:Name="hide1">
+            <Button Content="Добавить тест(ы)" Margin="10,0,0,0" Click="Button_Click_2" Width="100" FontSize="12" x:Name="TestAddButon"></Button>
             <TextBlock Text="Кол-во тестов" VerticalAlignment="Center" FontSize="18" Margin="10,0,10,0"></TextBlock>
             <TextBox Height="30" Width="50" PreviewTextInput="TextBox_PreviewTextInput" x:Name="NumberText" FontSize="20"></TextBox>
-            <Button Content="Сохранить тесты" Margin="10,0,0,0" Width="100" FontSize="12"></Button>
+            <Button Content="Сохранить тесты" Margin="10,0,0,0" Width="100" FontSize="12" x:Name="TestSaveButton" IsEnabled="false" Click="TestSaveButton_Click"></Button>
         </StackPanel>
-        <ScrollViewer Background="AntiqueWhite" Grid.Row="3" Grid.Column="1">
+        <ScrollViewer Background="AntiqueWhite" Grid.Row="3" Grid.Column="1" x:Name="hide2">
             <StackPanel x:Name="AdmTestAdd" HorizontalAlignment="Center" VerticalAlignment="Center"></StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2">

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CheckTest.ViewModels
 {
-    class TestAPI
+    class Tests
     {
         [JsonProperty("id_test")]
         public int IdTest { get; set; }
@@ -15,7 +15,7 @@ namespace CheckTest.ViewModels
         public byte[] TestInput { get; set; }
         [JsonProperty("test_output")]
         public byte[] TestOutput { get; set; }
-        [JsonProperty("describe_task")]
-        public string DescribeTask { get; set; }
+        [JsonProperty("id_task")]
+        public int IdTask { get; set; }
     }
 }
