@@ -6,38 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Windows;
 
 namespace CheckTest.ViewModels
 {
     class Compiler
     {
-        const string path = "comp/Compiler.exe";
-        public CompilerErrorCollection Compile(string text2,int IdTask)
-        {
-            
-            string text = @"using System;
-namespace HelloWorld
-    {
-        /// <summary>
-        /// Summary description for Class1.
-        /// </summary>
-        class HelloWorldClass
-        {
-            static void Main(string[] args)
-            {
-int a;
-for(int i=1;i<6;i++){
-a = Convert.ToInt32(Console.ReadLine());
-a*=a;
-Console.WriteLine(a);
+        const string path = "comp/Compiler.exe"; //Путь для испоняемого файла компилятора
 
-};
-                
-                
-
-            }
-        }
-    }"; 
+        public CompilerErrorCollection Compile(string text,int IdTask)
+        {
+            //Удаление файла, если он уже существует
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -49,14 +28,33 @@ Console.WriteLine(a);
                 OutputAssembly = path
             };
             var result = codeProvider.CompileAssemblyFromSource(cp, text);
-            
-            TestTask tests = new TestTask(IdTask, path);
-            Console.WriteLine(tests.Check());
-            if (tests.Check() != 2)
+            if (result.Errors.HasErrors)
             {
-
+                return result.Errors;
             }
+            TestTask tests = new TestTask(IdTask, path);
+            IEnumerable<Tests> TestResult = TestTaskAPI.GetTestByIdTask(IdTask).Where(x => x.id_test == 12);
+            List<int> work = new List<int>(TestResult.Count());
+
+            //Проверка всех тестов
+            foreach (var item in TestResult)
+            {
+                File.WriteAllBytes("comp/test/input", TestTask.StringToByte(item.test_input));
+                int res = tests.Check(TestTask.StringToByte(item.test_output));
+                if (res != 2)
+                {
+                    work.Add(res);
+                }
+                else
+                {
+                    MessageBox.Show("Произошла ошибка");
+                    return result.Errors;
+                }
+            }
+
             return result.Errors;
+
+
         }
     }
 }

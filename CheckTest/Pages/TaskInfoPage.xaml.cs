@@ -17,6 +17,7 @@ using CheckTest.ViewModels;
 using Microsoft.Win32;
 using System.IO;
 using CheckTest.API;
+using System.CodeDom.Compiler;
 
 namespace CheckTest.Pages
 {
@@ -34,6 +35,8 @@ namespace CheckTest.Pages
             var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
+            //Скрытие добавление тестов для обычных пользователей и для неавторизированных пользователей(если вдруг такие смогут попасть на данную страницу)
+
             //if (Guy.CurrentUser == null) 
             //{
             //    hide1.Visibility = hide;
@@ -52,8 +55,10 @@ namespace CheckTest.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //Чтение файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Файлы (*.txt, *.cs) | *.txt; *.cs;";
+            //Добавление текста файла в textbox для превью
             if (openFileDialog.ShowDialog() == true)
             {
                 string path = openFileDialog.FileName;
@@ -62,33 +67,46 @@ namespace CheckTest.Pages
                 programText.Text = streamReader.ReadToEnd();
                 SendButton.IsEnabled = true;
             }
+            else
+            {
+                MessageBox.Show("Файл не выбран");
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            //Создание компилируемого файла
             Compiler compiler = new Compiler();
-            foreach(var item in compiler.Compile(programText.Text,id))
+            var result = compiler.Compile(programText.Text, id);
+            if (result.HasErrors)
             {
-                Console.WriteLine(item);
+                foreach (CompilerError item in result)
+                {
+
+                    MessageBox.Show("В " + item.Line + " строке, " + item.Column + " столбце, найдена ошибка " + item.ErrorNumber + " :\n " + item.ErrorText);
+                }
             }
+            else
+            {
+                MessageBox.Show("Компиляция прошла успешно");
+            }
+            
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !(Char.IsDigit(e.Text, 0));
+            e.Handled = !(Char.IsDigit(e.Text, 0)); //Проверка на цифры
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(NumberText.Text))
+            //Проверка на заполненность поля
+            if (!String.IsNullOrEmpty(NumberText.Text))
             {
-                Console.WriteLine(" ");
-            }
-            else
-            {
-                AdmTestAdd.Children.Clear();
-                TestSaveButton.IsEnabled = true;
-                int a = Convert.ToInt32(NumberText.Text);
+                AdmTestAdd.Children.Clear(); //Отчистка всех предыдущих полей
+                int a = Convert.ToInt32(NumberText.Text); //Количество добавляемых тестов
+
+                //Добавление полей для ввода входных и выходных данных для теста
                 for (int i = 0; i < a; i++)
                 {
                     WrapPanel panel = new WrapPanel();
@@ -156,13 +174,28 @@ namespace CheckTest.Pages
                         VerticalAlignment = VerticalAlignment.Center
                     });
                 }
+
+                //Проверка того, добавлены ли поля для занесения тестов
+                if (AdmTestAdd.Children.Count != 0)
+                {
+                    TestSaveButton.IsEnabled = true;
+                }
+                else
+                {
+                    TestSaveButton.IsEnabled = false;
+                }
             }
         }
 
         private void TestSaveButton_Click(object sender, RoutedEventArgs e)
         {
             TestTaskAPI testTask = new TestTaskAPI();
+            //Основная часть занесения тестов в бд
+            
 
+
+            //Првоерка заполнености всех полей
+            bool IsNull = false;
             for (int i = 0; i < AdmTestAdd.Children.Count; i += 2)
             {
                 var Panel = (WrapPanel)AdmTestAdd.Children[i];
@@ -170,11 +203,50 @@ namespace CheckTest.Pages
                 var OutputPanel = (StackPanel)Panel.Children[1];
                 var InputTextBox = (TextBox)InputPanel.Children[1];
                 var OutputTextBox = (TextBox)OutputPanel.Children[1];
-                byte[] vs = Encoding.UTF8.GetBytes(InputTextBox.Text);
-                byte[] vs1 = Encoding.UTF8.GetBytes(OutputTextBox.Text);
-                
-                    Console.WriteLine(testTask.PostTestByIdTask(1, vs, vs1).ToString());
-                
+                if(String.IsNullOrEmpty(InputTextBox.Text)|| String.IsNullOrEmpty(OutputTextBox.Text))
+                {
+                    IsNull = true ;
+                    break;
+                }
+            }
+            if (IsNull)
+            {
+                MessageBox.Show("Не все поля заполнены");
+                return;
+            }
+            //Цикл, в котором пробегаются все тесты
+            for (int i = 0; i < AdmTestAdd.Children.Count; i += 2)
+            {
+                var Panel = (WrapPanel)AdmTestAdd.Children[i];
+                var InputPanel = (StackPanel)Panel.Children[0];
+                var OutputPanel = (StackPanel)Panel.Children[1];
+                var InputTextBox = (TextBox)InputPanel.Children[1];
+                var OutputTextBox = (TextBox)OutputPanel.Children[1];
+                byte[] StringByteInput = Encoding.UTF8.GetBytes(InputTextBox.Text);
+                byte[] StringByteOutput = Encoding.UTF8.GetBytes(OutputTextBox.Text);
+                string InputText = "";
+                string OutputText = "";
+                //Приведение byte в sting 
+                foreach (var item in StringByteInput)
+                {
+                    InputText += item;
+                }
+                foreach (var item in StringByteOutput)
+                {
+                    OutputText += item;
+                }
+
+                //Занесение теста в базу данных
+                HttpStatusCode status = testTask.PostTestByIdTask(id, InputText, OutputText);
+                if (status==HttpStatusCode.OK)
+                {
+                    MessageBox.Show("Добавление успешно");
+                }
+                else
+                {
+                    MessageBox.Show("Добавление неудачно. Ошибка: " + status.ToString());
+                }
+
             }
         }
     }
