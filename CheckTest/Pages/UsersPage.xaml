@@ -13,7 +13,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="8*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button x:Name="UserAdd" Width="Auto">Добавить пользователя</Button>
+        <Button x:Name="UserAdd" Width="Auto" Click="UserAdd_Click">Добавить пользователя</Button>
         <StackPanel x:Name="MainPanel">
             
         </StackPanel>

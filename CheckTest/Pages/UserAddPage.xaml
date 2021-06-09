@@ -9,6 +9,27 @@
       Title="UserAddPage" Background="Linen">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Логин" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+        <TextBox Grid.Row="1" x:Name="LoginText" FontSize="20"></TextBox>
+        <TextBlock Text="Пароль" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" Grid.Row="2"></TextBlock>
+        <TextBox x:Name="PassText" Grid.Row="3" FontSize="20"></TextBox>
+        <TextBlock Text="Повторите пароль" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" Grid.Row="4"></TextBlock>
+        <TextBox Grid.Row="5" x:Name="PassText1" FontSize="20"></TextBox>
+        <TextBlock Text="Имя пользователя" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" Grid.Row="6"></TextBlock>
+        <TextBox Grid.Row="7" x:Name="NameText" FontSize="20"></TextBox>
+        <TextBlock Foreground="red" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ErrorText"></TextBlock>
+        <Button Grid.Row="9" Content="Регистрация" Click="Button_Click" ></Button>
     </Grid>
 </Page>
