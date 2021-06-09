@@ -64,10 +64,18 @@ namespace CheckTest.Pages
                         var butDelete = new Button() //Кнопка удаления задания
                         {
                             Content = "Удалить задание",
-                            Background = Brushes.Red,
+                            Background = Brushes.Brown,
                             Uid = item.IdTask.ToString()
                         };
+                        var butRed = new Button() //Кнопка редактирования задания
+                        {
+                            Content = "Редактировать задание",
+                            Background = Brushes.Teal,
+                            Uid = item.IdTask.ToString()
+                        };
+                        butRed.Click += ButRed_Click;
                         butDelete.Click += butDelete_click;
+                        FGG.Children.Add(butRed);
                         FGG.Children.Add(butDelete);
                     }
                 }
@@ -100,6 +108,13 @@ namespace CheckTest.Pages
                     this.NavigationService.Navigate(new TaskPage());
                 }
             }
+        }
+
+        private void ButRed_Click(object sender, RoutedEventArgs e)
+        {
+            var but = (Button)sender;
+            int id = Convert.ToInt32(but.Uid);
+            this.NavigationService.Navigate(new TaskInfoUpdatePage(id));
         }
     }
 }

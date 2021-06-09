@@ -39,5 +39,15 @@ namespace CheckTest.ViewModels
 
             }
         }
+        //Редактирование заданий
+        public static bool UpdateTaskByIdTask(int id_task,string name, string desc)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.PutAsync($"http://188.234.244.32:8090/api/tasks/{id_task}?name_task={name}&describe_task={desc}",null).Result;
+                return response.IsSuccessStatusCode;
+
+            }
+        }
     }
 }

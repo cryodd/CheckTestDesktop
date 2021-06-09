@@ -16,6 +16,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Hidden" Background="Teal" x:Name="UserButton" Click="UserButton_Click">Пользователи</Button>
             <Button VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Hidden" Background="Teal" x:Name="AddTaskButton" Click="AddTaskButton_Click">Добавление заданий</Button>
         <TextBlock  FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Hidden" x:Name="HelloName"></TextBlock>
         <Button VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Hidden" Background="Teal" x:Name="LogoutButton" Click="LogoutButton_Click">Выход</Button>

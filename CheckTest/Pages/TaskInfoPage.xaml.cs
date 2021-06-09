@@ -108,6 +108,7 @@ namespace CheckTest.Pages
             Button but = (Button)sender;
             ResultUpdateWindow win = new ResultUpdateWindow((Convert.ToInt32(but.Uid))); //Открытие окна с редактированием
             win.Closed += Win_Closed;
+            win.WindowStartupLocation =WindowStartupLocation.CenterScreen;
             win.Show();
         }
         //При закрытии окна с редактированием, обновляется страница

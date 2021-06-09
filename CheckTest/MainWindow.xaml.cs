@@ -39,10 +39,12 @@ namespace CheckTest
                 if (Guy.CurrentUser.First().Access == 1)
                 {
                     AddTaskButton.Visibility = Visibility;
+                    UserButton.Visibility = Visibility;
                 }
                 else
                 {
                     AddTaskButton.Visibility = Visibility.Hidden;
+                    UserButton.Visibility = Visibility.Hidden;
                 }
             }
             if (MainFrame.CanGoBack && Guy.CurrentUser!=null)
@@ -61,6 +63,7 @@ namespace CheckTest
             HelloName.Visibility = Visibility.Hidden;
             GoBackButton.Visibility = Visibility.Hidden;
             LogoutButton.Visibility = Visibility.Hidden;
+            UserButton.Visibility = Visibility.Hidden;
             AddTaskButton.Visibility = Visibility.Hidden;
             MainFrame.Navigate(new Pages.AuthPage());
         }
@@ -73,6 +76,11 @@ namespace CheckTest
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new Pages.TaskAddPage());
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new Pages.UsersPage());
         }
     }
 }

@@ -36,7 +36,14 @@ namespace CheckTest.Pages
             string result = ResultBox.Text;
             if (!String.IsNullOrWhiteSpace(result) && Convert.ToInt32(result) <= 100)
             {
-                ProgrammingResultsAPI.UpdateResultByIdResult(id, Convert.ToInt32(result), current.email, current.id_task);
+                if(ProgrammingResultsAPI.UpdateResultByIdResult(id, Convert.ToInt32(result), current.email, current.id_task))
+                {
+                    MessageBox.Show("Успешно");
+                }
+                else
+                {
+                    MessageBox.Show("Неуспешно");
+                }
                 this.Close();
             }
         }

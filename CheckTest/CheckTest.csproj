@@ -65,6 +65,9 @@
     <Compile Include="Pages\ResultUpdateWindow.xaml.cs">
       <DependentUpon>ResultUpdateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TaskInfoUpdatePage.xaml.cs">
+      <DependentUpon>TaskInfoUpdatePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TaskAddPage.xaml.cs">
       <DependentUpon>TaskAddPage.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,12 @@
     </Compile>
     <Compile Include="Pages\TaskPage.xaml.cs">
       <DependentUpon>TaskPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserAddPage.xaml.cs">
+      <DependentUpon>UserAddPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UsersPage.xaml.cs">
+      <DependentUpon>UsersPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AuthAPI.cs" />
     <Compile Include="ViewModels\Compiler.cs" />
@@ -106,6 +115,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\TaskInfoUpdatePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\TaskAddPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +128,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\TaskPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserAddPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UsersPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
