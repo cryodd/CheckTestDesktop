@@ -32,11 +32,11 @@ namespace CheckTest.ViewModels
                 
             }
         }
-        public static bool ass()
+        public static bool DeleteTestByIdTask(int id_task)
         {
             using (var client = new HttpClient())
             {
-                HttpResponseMessage response = client.DeleteAsync($"http://188.234.244.32:8090/api/tests?id_task=2").Result;
+                HttpResponseMessage response = client.DeleteAsync($"http://188.234.244.32:8090/api/tests/{id_task}").Result;
                 return response.IsSuccessStatusCode;
 
             }

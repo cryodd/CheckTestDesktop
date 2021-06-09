@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CheckTest.API;
 using CheckTest.ViewModels;
 
 namespace CheckTest.Pages
@@ -24,6 +25,7 @@ namespace CheckTest.Pages
         public TaskPage()
         {
             InitializeComponent();
+            //Вывод всех заданий
             foreach(var item in TasksAPI.GetTasksList())
             {
 
@@ -49,12 +51,26 @@ namespace CheckTest.Pages
                         Bottom = 20
                     }
                 });
-                var but = new Button()
+                var but = new Button() //Кнопка перехода к заданию
                 {
                     Content = "Перейти к заданию",
                     Uid = item.IdTask.ToString()
                 };
                 but.Click += but_click;
+                if (Guy.CurrentUser != null)//Проверка вошел ли пользователь(на всякий случай)
+                {
+                    if (Guy.CurrentUser.First().Access == 1)//Проверка того, что пользователь - это администратор
+                    {
+                        var butDelete = new Button() //Кнопка удаления задания
+                        {
+                            Content = "Удалить задание",
+                            Background = Brushes.Red,
+                            Uid = item.IdTask.ToString()
+                        };
+                        butDelete.Click += butDelete_click;
+                        FGG.Children.Add(butDelete);
+                    }
+                }
                 FGG.Children.Add(but);
                 FGG.Children.Add(new Line()
                 {
@@ -67,10 +83,22 @@ namespace CheckTest.Pages
                     VerticalAlignment = VerticalAlignment.Center
                 });
             }
-            void but_click(object sender, RoutedEventArgs e)
+            void but_click(object sender, RoutedEventArgs e) //Переход на страницу с заданием
             {
                 var but = (Button)sender;
                 this.NavigationService.Navigate(new TaskInfoPage(Convert.ToInt32(but.Uid)));
+            }
+            void butDelete_click(object sender, RoutedEventArgs e)//Удаление задания
+            {
+                var but = (Button)sender;
+                int id = Convert.ToInt32(but.Uid);       
+                if (MessageBox.Show("Вы точно хотите удалить это задание?","Удаление задания", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    //TestTaskAPI.DeleteTestByIdTask(id);
+                    //ProgrammingResultsAPI.DeleteResultByIdTask(id);
+                    TasksAPI.DeleteTaskByIdTask(id);
+                    this.NavigationService.Navigate(new TaskPage());
+                }
             }
         }
     }

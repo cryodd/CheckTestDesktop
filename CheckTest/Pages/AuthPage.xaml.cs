@@ -29,7 +29,7 @@ namespace CheckTest.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            //Вход
             string login = EmailText.Text;
             string password = PassText.Password;
             AuthAPI obj = new AuthAPI();
@@ -53,6 +53,7 @@ namespace CheckTest.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            //Если пользователь вошел, то для него скрываются все элементы
             if (Guy.CurrentUser != null)
             {
                 text1.Visibility = Visibility.Hidden;

@@ -8,6 +8,7 @@ namespace CheckTest
 {
     public class Guy
     {
+        //Текущий пользователь
         public static List<TasksUsers> CurrentUser { get; set; }
     }
 }

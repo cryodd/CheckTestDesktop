@@ -13,8 +13,8 @@ namespace CheckTest.ViewModels
     class Compiler
     {
         const string path = "comp/Compiler.exe"; //Путь для испоняемого файла компилятора
-
-        public CompilerErrorCollection Compile(string text,int IdTask)
+        //Компиляция
+        public CompilerErrorCollection Compile(string text)
         {
             //Удаление файла, если он уже существует
             if (File.Exists(path))
@@ -27,34 +27,50 @@ namespace CheckTest.ViewModels
                 GenerateExecutable = true,
                 OutputAssembly = path
             };
-            var result = codeProvider.CompileAssemblyFromSource(cp, text);
+            var result = codeProvider.CompileAssemblyFromSource(cp, text);//Создание исполняемого файла компилятора
             if (result.Errors.HasErrors)
             {
                 return result.Errors;
             }
-            TestTask tests = new TestTask(IdTask, path);
-            IEnumerable<Tests> TestResult = TestTaskAPI.GetTestByIdTask(IdTask).Where(x => x.id_test == 12);
-            List<int> work = new List<int>(TestResult.Count());
-
-            //Проверка всех тестов
-            foreach (var item in TestResult)
-            {
-                File.WriteAllBytes("comp/test/input", TestTask.StringToByte(item.test_input));
-                int res = tests.Check(TestTask.StringToByte(item.test_output));
-                if (res != 2)
-                {
-                    work.Add(res);
-                }
-                else
-                {
-                    MessageBox.Show("Произошла ошибка");
-                    return result.Errors;
-                }
-            }
-
             return result.Errors;
+        }
+        //Тестирование
+        public List<int> Test(int IdTask)
+        {
+            try
+            {
 
 
+                TestTask tests = new TestTask(IdTask, path);
+                IEnumerable<Tests> TestResult = TestTaskAPI.GetTestByIdTask(IdTask).Where(x => x.id_task == IdTask);//Все тесты, для конкретного задания
+                List<int> work = new List<int>(TestResult.Count());//Список всех результатов тестов(0- тест не пройден, 1- пройден)
+
+                //Проверка всех тестов
+                foreach (var item in TestResult)
+                {
+                    File.WriteAllBytes("comp/test/input", TestTask.StringToByte(item.test_input)); //Создание файла со входными данными
+                    int res = tests.Check(TestTask.StringToByte(item.test_output)); //Проверка теста с эталонным значением
+                    if (res != 2)//Если нет ошибок
+                    {
+                        work.Add(res);
+                    }
+                    else//Если есть ошибки
+                    {
+                        MessageBox.Show("Произошла ошибка");
+                        return null;
+                    }
+                }
+                foreach (int item in work)
+                {
+                    Console.WriteLine(item);
+                }
+                return work;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
         }
     }
 }

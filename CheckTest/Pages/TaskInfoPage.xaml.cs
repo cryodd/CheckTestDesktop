@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using System.IO;
 using CheckTest.API;
 using System.CodeDom.Compiler;
+using CheckTest.Models;
 
 namespace CheckTest.Pages
 {
@@ -26,31 +27,101 @@ namespace CheckTest.Pages
     /// </summary>
     public partial class TaskInfoPage : Page
     {
-        int id;
+        int id; //Номер задания
         Visibility hide = Visibility.Hidden;
         public TaskInfoPage(int id)
         {
             InitializeComponent();
             this.id = id;
-            var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First();
+            var CurUser = Guy.CurrentUser; //Текущий пользователь
+            var item = TasksAPI.GetTasksList().Where(x => x.IdTask == id).First(); //Текущее задание
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
+            //Вывод результатов пользователя по текущему заданию
+            if (CurUser != null)
+            {
+                IEnumerable<ProgrammingResults> ResultList = ProgrammingResultsAPI.GetResult().Where(x => x.id_task == id); //Для админа выводятся все результаты, для пользователя, только его
+                if (CurUser.First().Access == 0)
+                {
+                    ResultList = ResultList.Where(x => x.email == CurUser.First().Email);
+                }
+                int IdRes = 1;
+                foreach (var result in ResultList)
+                {
+                    string name = "";
+                    WrapPanel panel = new WrapPanel();
+                    if (CurUser.First().Access == 1)
+                    {
+                        name = "от пользователя с email`ом " + result.email;
+                    }
+                    panel.Children.Add(new TextBlock
+                    {
+                        Text = IdRes++ + ". Результат" + name + ": " + result.result + "%",
+                        FontSize = 28
+                    });
+                    if (CurUser.First().Access == 1)
+                    {
+                        //Кнопка удаления результата, только для админов
+                        var but = new Button
+                        {
+                            Content = "Удалить",
+                            FontSize = 28,
+                            Background = Brushes.Red,
+                            Uid = result.id_result.ToString()
+                        };
+                        //Кнопка редактирования результата
+                        var butRed = new Button
+                        {
+                            Content = "Редактировать",
+                            FontSize = 28,
+                            Background = Brushes.Teal,
+                            Uid = result.id_result.ToString()
+                        };
+                        but.Click += But_Click;
+                        butRed.Click += ButRed_Click;
+                        panel.Children.Add(butRed);
+                        panel.Children.Add(but);
+                    }
+                    ResultPreview.Children.Add(panel);
+                }
+
+            }
             //Скрытие добавление тестов для обычных пользователей и для неавторизированных пользователей(если вдруг такие смогут попасть на данную страницу)
+            if (CurUser == null)
+            {
+                hide1.Visibility = hide;
+                hide2.Visibility = hide;
+            }
+            else
+            {
+                if (Guy.CurrentUser.First().Access != 1)
+                {
+                    hide1.Visibility = hide;
+                    hide2.Visibility = hide;
+                }
+            }
 
-            //if (Guy.CurrentUser == null) 
-            //{
-            //    hide1.Visibility = hide;
-            //    hide2.Visibility = hide;
-            //}
-            //else
-            //{
-            //    if (Guy.CurrentUser.First().Access != 1)
-            //    {
-            //        hide1.Visibility = hide;
-            //        hide2.Visibility = hide;
-            //    }
-            //}
+        }
+        //Редактирование результата
+        private void ButRed_Click(object sender, RoutedEventArgs e)
+        {
+            Button but = (Button)sender;
+            ResultUpdateWindow win = new ResultUpdateWindow((Convert.ToInt32(but.Uid))); //Открытие окна с редактированием
+            win.Closed += Win_Closed;
+            win.Show();
+        }
+        //При закрытии окна с редактированием, обновляется страница
+        private void Win_Closed(object sender, EventArgs e)
+        {
+            this.NavigationService.Navigate(new TaskInfoPage(id));
+        }
 
+        //Удаление результата
+        private void But_Click(object sender, RoutedEventArgs e)
+        {
+            Button but = (Button)sender;
+            ProgrammingResultsAPI.DeleteResultByIdResult(Convert.ToInt32(but.Uid));
+            this.NavigationService.Navigate(new TaskInfoPage(id));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -76,20 +147,47 @@ namespace CheckTest.Pages
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //Создание компилируемого файла
+           
             Compiler compiler = new Compiler();
-            var result = compiler.Compile(programText.Text, id);
+            var result = compiler.Compile(programText.Text);
             if (result.HasErrors)
             {
                 foreach (CompilerError item in result)
                 {
 
-                    MessageBox.Show("В " + item.Line + " строке, " + item.Column + " столбце, найдена ошибка " + item.ErrorNumber + " :\n " + item.ErrorText);
+                    MessageBox.Show("В " + item.Line + " строке, " + item.Column + " столбце, найдена ошибка " + item.ErrorNumber + " :\n " + item.ErrorText); //Вывод описания ошибки
                 }
             }
             else
             {
                 MessageBox.Show("Компиляция прошла успешно");
+                List<int> grade = compiler.Test(id); //Тестирование
+                if (grade!=null)
+                {
+                    int gr =Convert.ToInt32( Math.Round(Average(grade) * 100)); //Средний балл
+                    MessageBox.Show("Все тесты завершены, ваш балл = " + gr);
+                    if (Guy.CurrentUser != null) //Если вдруг сюда попал неавторизированный пользователь
+                    {
+                        if (ProgrammingResultsAPI.PostResult(id, Guy.CurrentUser.First().Email, gr))
+                        {
+                            MessageBox.Show("Результаты занесены");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка при занесении результатов");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Вы не вошли");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Не все тесты завершены, обнаружена ошибка");
+                }
             }
+            
             
         }
 
@@ -248,6 +346,16 @@ namespace CheckTest.Pages
                 }
 
             }
+        }
+        //Среднее значение
+        private decimal Average(List<int> list)
+        {
+            int summ = 0;
+            foreach(int num in list)
+            {
+                summ += num;
+            }
+            return summ / (decimal)list.Count;
         }
     }
 }

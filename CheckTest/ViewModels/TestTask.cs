@@ -25,28 +25,32 @@ namespace CheckTest.ViewModels
             etalon = dir + "/etalon";
             
         }
+        //Проверка
         public int Check(byte[] EtalonByte)
         { 
             try
             {
-                //Удаление файла с выходными данными
-                File.Delete(output_path);
-
                 proc.StartInfo.FileName = proc_path;
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.RedirectStandardInput = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
-
+                //Запись исходных данных во входной файл
                 using (StreamReader streamReader = new StreamReader(input_path))
                 {
                     while ((line = streamReader.ReadLine()) != null)
                     {
                         proc.StandardInput.WriteLine(line);
                     }
-                }
-                using (StreamWriter streamWriter = new StreamWriter(output_path))
+                }                   
+                //Удаление файла с выходными данными
+                File.Delete(output_path);
+                //Удаление массива с выходными данными
+                lineMass.Clear();
+                //Запись выходных данных в файл
+                using (StreamWriter streamWriter = new StreamWriter(output_path)) 
                 {
+
                     while ((line = proc.StandardOutput.ReadLine()) != null)
                     {
                         lineMass.Add(line);
@@ -60,6 +64,7 @@ namespace CheckTest.ViewModels
                     
                 }
                 proc.WaitForExit();
+                //Проверка совпадения эталона и выходных данных
                 if (FileEquals(output_path, EtalonByte))
                 {
                     return 1;
@@ -73,7 +78,7 @@ namespace CheckTest.ViewModels
             catch(Exception e)
             {
                 proc.Kill();
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message); //Вывод ошибки
                 return 2;
             }
             

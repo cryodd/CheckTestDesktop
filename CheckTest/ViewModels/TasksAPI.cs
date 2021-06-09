@@ -9,6 +9,7 @@ namespace CheckTest.ViewModels
 {
     public class TasksAPI
     {
+        //Вывод всех заданий
         public static List<Tasks> GetTasksList()
         {
             using (var client = new HttpClient())
@@ -19,13 +20,23 @@ namespace CheckTest.ViewModels
                 return answer.Data;
             }
         }
-        
-        public bool PostTask(string nametask, string desctask)
+        //Добавление заданий
+        public static bool PostTask(string nametask, string desctask)
         {
             using (var client = new HttpClient())
             {
                 HttpResponseMessage response = client.PostAsync($"http://188.234.244.32:8090/api/tasks?name_task={nametask}&describe_task={desctask}", null).Result;
                 return response.IsSuccessStatusCode;
+            }
+        }
+        //Удаление заданий
+        public static bool DeleteTaskByIdTask(int id_task)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.DeleteAsync($"http://188.234.244.32:8090/api/tasks/{id_task}").Result;
+                return response.IsSuccessStatusCode;
+
             }
         }
     }

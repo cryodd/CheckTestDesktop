@@ -9,6 +9,7 @@ namespace CheckTest.API
 {
     public class AuthAPI
     {
+        //Вход
         public bool GetAuth(string login,string password)
         {
             using (var client = new HttpClient())
@@ -18,7 +19,7 @@ namespace CheckTest.API
                 var answer = JsonConvert.DeserializeObject<ResponseAPI<List<TasksUsers>>>(content.Result);
                 if (answer.Success)
                 {
-                    Guy.CurrentUser = answer.Data;
+                    Guy.CurrentUser = answer.Data; //Текущий пользователь
                 }
                 else
                 {
@@ -27,6 +28,7 @@ namespace CheckTest.API
                 return answer.Success;
             }
         }
+        //Регистрация
         public bool PostReg(string email,string pass,string name)
         {
             int access = 0;

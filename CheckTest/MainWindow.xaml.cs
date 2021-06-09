@@ -24,7 +24,7 @@ namespace CheckTest
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new Pages.TaskInfoPage(1));
+            MainFrame.Navigate(new Pages.AuthPage()); //Перенаправление на страницу с авторизацией
             
         }
 
@@ -35,6 +35,15 @@ namespace CheckTest
                 HelloName.Text = $"Здраствуйте, {Guy.CurrentUser.First().Name}";
                 HelloName.Visibility = Visibility;
                 LogoutButton.Visibility = Visibility;
+                //Кнопка для добавления заданий видна только для администраторов
+                if (Guy.CurrentUser.First().Access == 1)
+                {
+                    AddTaskButton.Visibility = Visibility;
+                }
+                else
+                {
+                    AddTaskButton.Visibility = Visibility.Hidden;
+                }
             }
             if (MainFrame.CanGoBack && Guy.CurrentUser!=null)
             {
@@ -45,19 +54,25 @@ namespace CheckTest
                 GoBackButton.Visibility = Visibility.Hidden;
             }
         }
-
+        //Кнопка для выхода из учетной записи
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             Guy.CurrentUser = null;
             HelloName.Visibility = Visibility.Hidden;
             GoBackButton.Visibility = Visibility.Hidden;
             LogoutButton.Visibility = Visibility.Hidden;
+            AddTaskButton.Visibility = Visibility.Hidden;
             MainFrame.Navigate(new Pages.AuthPage());
         }
-
+        //Кнопка назад
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.GoBack();
+        }
+        //Переход на страницу с добавлением тестов
+        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new Pages.TaskAddPage());
         }
     }
 }

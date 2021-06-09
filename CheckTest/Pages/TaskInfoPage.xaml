@@ -41,7 +41,10 @@
             <Button Content="Выбрать файл" Click="Button_Click" x:Name="choose"></Button>
             <TextBlock x:Name="NameFile" VerticalAlignment="Center" FontSize="15" TextWrapping="Wrap"></TextBlock>
         </StackPanel>
+        <TextBlock Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20">Ваши результаты:</TextBlock>
         <Button Grid.Row="5" HorizontalAlignment="Left" Content="Отправить" Click="Button_Click_1" IsEnabled="True" x:Name="SendButton"></Button>
-        
+        <ScrollViewer Background="AntiqueWhite" Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" >
+            <StackPanel x:Name="ResultPreview"></StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
