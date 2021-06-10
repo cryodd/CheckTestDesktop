@@ -29,7 +29,7 @@ namespace CheckTest.Pages
             id = id_result;
             TaskIdBox.ItemsSource = TestTaskAPI.GetTestByIdTest(id_result);
             TaskIdBox.DisplayMemberPath = "id_test";
-            TaskIdBox.SelectedItem = "id_test";
+            TaskIdBox.SelectedValuePath = "id_test";
         }
 
         private void TaskIdBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
