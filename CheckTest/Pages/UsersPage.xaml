@@ -34,6 +34,6 @@
             <TextBox  HorizontalAlignment="Left" x:Name="NameText"></TextBox>
             <TextBlock VerticalAlignment="Center" FontSize="20" >Имя</TextBlock>
         </WrapPanel>
-        <Button Grid.Row="5" Click="Button_Click_1">Редактировать</Button>
+        <Button Grid.Row="5" Click="Button_Click_1" x:Name="RedBut" IsEnabled="false">Редактировать</Button>
     </Grid>
 </Page>

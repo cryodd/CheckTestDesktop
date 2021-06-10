@@ -1,4 +1,5 @@
 ﻿using CheckTest.API;
+using CheckTest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace CheckTest.Pages
     /// </summary>
     public partial class UsersPage : Page
     {
+        TasksUsers curUser = new TasksUsers();
         public UsersPage()
         {
             InitializeComponent();
@@ -28,19 +30,67 @@ namespace CheckTest.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var curUser = AuthAPI.GetUser(EmailSearchText.Text).FirstOrDefault();
+            curUser = AuthAPI.GetUser(EmailSearchText.Text).FirstOrDefault();
             if ( curUser != null)
             {
-                
+                EmailText.Text = curUser.Email;
+                PassText.Text = curUser.Password;
+                NameText.Text = curUser.Name;
+                RedBut.IsEnabled = true;
             }
             else
             {
                 MessageBox.Show("Пользователя не существует");
+                RedBut.IsEnabled = false;
+
             }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            string name = NameText.Text;
+            string pass = PassText.Text;
+            string email = EmailText.Text;
+            if (!String.IsNullOrWhiteSpace(name)&& !String.IsNullOrWhiteSpace(pass) && !String.IsNullOrWhiteSpace(email))
+            {
+                if (email == curUser.Email)
+                {
+                    if (AuthAPI.UpdateByEmail(email, curUser.Email, pass, name, Convert.ToInt32(curUser.Access)))
+                    {
+                        MessageBox.Show("Успешно");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка");
+                    }
+                }
+
+                else {
+                    if ((AuthAPI.GetUser(email).FirstOrDefault()) == null)
+                    {
+                        if (AuthAPI.UpdateByEmail(email, curUser.Email, pass, name, Convert.ToInt32(curUser.Access)))
+                        {
+                            MessageBox.Show("Успешно");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Пользователь с таким email уже существует");
+
+                    }
+                }
+                    
+                
+                
+            }
+            else
+            {
+                MessageBox.Show("Не все поля заполнены");
+            }
         }
 
         private void UserAdd_Click(object sender, RoutedEventArgs e)

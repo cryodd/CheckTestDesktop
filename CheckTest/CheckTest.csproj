@@ -79,6 +79,9 @@
     <Compile Include="Pages\TaskPage.xaml.cs">
       <DependentUpon>TaskPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TestDetailPage.xaml.cs">
+      <DependentUpon>TestDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TestUpdatePage.xaml.cs">
       <DependentUpon>TestUpdatePage.xaml</DependentUpon>
     </Compile>
@@ -134,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\TaskPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\TestDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

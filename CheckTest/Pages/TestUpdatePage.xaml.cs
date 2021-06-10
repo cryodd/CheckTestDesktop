@@ -55,6 +55,7 @@ namespace CheckTest.Pages
                 if(TestTaskAPI.PutTestByIdTask(Convert.ToInt32(CBOX.SelectedValue), id, InputText1, OutputText1))
                 {
                     MessageBox.Show("Успешно");
+                    this.NavigationService.Navigate(new TaskPage());
                 }
                 else
                 {

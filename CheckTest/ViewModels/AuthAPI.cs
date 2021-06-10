@@ -48,5 +48,14 @@ namespace CheckTest.API
                 return response.IsSuccessStatusCode;
             }
         }
+        public static bool UpdateByEmail(string email,string new_email, string pass, string name,int access)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.GetAsync($"http://188.234.244.32:8090/tasks_users/{email}?password={pass}&name={name}&access={access}&email={new_email}").Result;
+                return response.IsSuccessStatusCode;
+            }
+
+        }
     }
 }
