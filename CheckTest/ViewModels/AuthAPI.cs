@@ -28,6 +28,16 @@ namespace CheckTest.API
                 return answer.Success;
             }
         }
+        public static List<TasksUsers> GetUser(string email)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.GetAsync($"http://188.234.244.32:8090/api/tasks_users/{email}").Result;
+                var content = response.Content.ReadAsStringAsync();
+                var answer = JsonConvert.DeserializeObject<ResponseAPI<List<TasksUsers>>>(content.Result);
+                return answer.Data;
+            }
+        }
         //Регистрация
         public bool PostReg(string email,string pass,string name)
         {

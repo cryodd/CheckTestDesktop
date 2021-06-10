@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckTest.API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,24 @@ namespace CheckTest.Pages
         public UsersPage()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var curUser = AuthAPI.GetUser(EmailSearchText.Text).FirstOrDefault();
+            if ( curUser != null)
+            {
+                
+            }
+            else
+            {
+                MessageBox.Show("Пользователя не существует");
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

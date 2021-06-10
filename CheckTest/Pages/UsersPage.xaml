@@ -11,11 +11,29 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
         <Button x:Name="UserAdd" Width="Auto">Добавить пользователя</Button>
-        <StackPanel x:Name="MainPanel">
-            
-        </StackPanel>
+        <WrapPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBox Width="300" x:Name="EmailSearchText"></TextBox>
+            <Button FontSize="15" Click="Button_Click">Поиск по указанному email</Button>
+        </WrapPanel>
+        <WrapPanel Grid.Row="2" VerticalAlignment="Center">
+            <TextBox  HorizontalAlignment="Left"  x:Name="EmailText"></TextBox>
+            <TextBlock VerticalAlignment="Center" FontSize="20">Email</TextBlock>
+        </WrapPanel>
+        <WrapPanel Grid.Row="3" VerticalAlignment="Center">
+            <TextBox  HorizontalAlignment="Left" x:Name="PassText"></TextBox>
+            <TextBlock VerticalAlignment="Center" FontSize="20" >Пароль</TextBlock>
+        </WrapPanel>
+        <WrapPanel Grid.Row="4" VerticalAlignment="Center">
+            <TextBox  HorizontalAlignment="Left" x:Name="NameText"></TextBox>
+            <TextBlock VerticalAlignment="Center" FontSize="20" >Имя</TextBlock>
+        </WrapPanel>
+        <Button Grid.Row="5" Click="Button_Click_1">Редактировать</Button>
     </Grid>
 </Page>

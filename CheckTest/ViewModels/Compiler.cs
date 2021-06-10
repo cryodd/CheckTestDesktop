@@ -7,6 +7,7 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Windows;
+using CheckTest.Models;
 
 namespace CheckTest.ViewModels
 {
@@ -35,7 +36,7 @@ namespace CheckTest.ViewModels
             return result.Errors;
         }
         //Тестирование
-        public List<int> Test(int IdTask)
+        public List<Details> Test(int IdTask)
         {
             try
             {
@@ -43,28 +44,29 @@ namespace CheckTest.ViewModels
 
                 TestTask tests = new TestTask(IdTask, path);
                 IEnumerable<Tests> TestResult = TestTaskAPI.GetTestByIdTask(IdTask).Where(x => x.id_task == IdTask);//Все тесты, для конкретного задания
-                List<int> work = new List<int>(TestResult.Count());//Список всех результатов тестов(0- тест не пройден, 1- пройден)
-
+                List<Details> result = new List<Details>(); //Список всех результатов тестов(0- тест не пройден, 1- пройден)
                 //Проверка всех тестов
                 foreach (var item in TestResult)
                 {
                     File.WriteAllBytes("comp/test/input", TestTask.StringToByte(item.test_input)); //Создание файла со входными данными
-                    int res = tests.Check(TestTask.StringToByte(item.test_output)); //Проверка теста с эталонным значением
-                    if (res != 2)//Если нет ошибок
+                    Details res = tests.Check(TestTask.StringToByte(item.test_output)); //Проверка теста с эталонным значением
+                    res.id_test = item.id_test;
+                    if (res.sucsess != 2)//Если нет ошибок
                     {
-                        work.Add(res);
+                        result.Add(res);
                     }
                     else//Если есть ошибки
                     {
                         MessageBox.Show("Произошла ошибка");
                         return null;
                     }
+                    
                 }
-                foreach (int item in work)
+                foreach (var item in result)
                 {
-                    Console.WriteLine(item);
+                    Console.WriteLine(item.sucsess.ToString() + item.user_output);
                 }
-                return work;
+                return result;
             }
             catch(Exception e)
             {

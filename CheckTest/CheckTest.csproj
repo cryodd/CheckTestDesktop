@@ -61,7 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Details.cs" />
     <Compile Include="Models\ProgrammingResults.cs" />
+    <Compile Include="Models\TestDetails.cs" />
     <Compile Include="Pages\ResultUpdateWindow.xaml.cs">
       <DependentUpon>ResultUpdateWindow.xaml</DependentUpon>
     </Compile>
@@ -89,6 +91,7 @@
     <Compile Include="ViewModels\ProgrammingResultsAPI.cs" />
     <Compile Include="ViewModels\TasksAPI.cs" />
     <Compile Include="Models\Tests.cs" />
+    <Compile Include="ViewModels\TestDetailsAPI.cs" />
     <Compile Include="ViewModels\TestTask.cs" />
     <Compile Include="ViewModels\TestTaskAPI.cs" />
     <Page Include="MainDictionary.xaml">

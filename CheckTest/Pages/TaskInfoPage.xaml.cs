@@ -1,24 +1,19 @@
-﻿using System;
-using System.Net;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using CheckTest.API;
+using CheckTest.Models;
 using CheckTest.ViewModels;
 using Microsoft.Win32;
-using System.IO;
-using CheckTest.API;
+using System;
 using System.CodeDom.Compiler;
-using CheckTest.Models;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace CheckTest.Pages
 {
@@ -56,7 +51,7 @@ namespace CheckTest.Pages
                     }
                     panel.Children.Add(new TextBlock
                     {
-                        Text = IdRes++ + ". Результат" + name + ": " + result.result + "%",
+                        Text = IdRes++ + ". Результат " + name + ": " + result.result + "%",
                         FontSize = 28
                     });
                     if (CurUser.First().Access == 1)
@@ -108,7 +103,7 @@ namespace CheckTest.Pages
             Button but = (Button)sender;
             ResultUpdateWindow win = new ResultUpdateWindow((Convert.ToInt32(but.Uid))); //Открытие окна с редактированием
             win.Closed += Win_Closed;
-            win.WindowStartupLocation =WindowStartupLocation.CenterScreen;
+            win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             win.Show();
         }
         //При закрытии окна с редактированием, обновляется страница
@@ -148,7 +143,7 @@ namespace CheckTest.Pages
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //Создание компилируемого файла
-           
+
             Compiler compiler = new Compiler();
             var result = compiler.Compile(programText.Text);
             if (result.HasErrors)
@@ -162,16 +157,36 @@ namespace CheckTest.Pages
             else
             {
                 MessageBox.Show("Компиляция прошла успешно");
-                List<int> grade = compiler.Test(id); //Тестирование
-                if (grade!=null)
+                List<Details> det = compiler.Test(id);//Тестирование
+                List<int> grade = new List<int>();
+
+                if (det != null)
                 {
-                    int gr =Convert.ToInt32( Math.Round(Average(grade) * 100)); //Средний балл
+                    foreach (var item in det)
+                    {
+                        grade.Add(item.sucsess);
+                    }
+                    int gr = Convert.ToInt32(Math.Round(Average(grade) * 100)); //Средний балл
                     MessageBox.Show("Все тесты завершены, ваш балл = " + gr);
                     if (Guy.CurrentUser != null) //Если вдруг сюда попал неавторизированный пользователь
                     {
                         if (ProgrammingResultsAPI.PostResult(id, Guy.CurrentUser.First().Email, gr))
                         {
-                            MessageBox.Show("Результаты занесены");
+                            var last = ProgrammingResultsAPI.GetResult().Last();
+                            foreach (var item in det)
+                            {
+                                if (TestDetailsAPI.PostDetails(item.id_test, item.user_output, item.sucsess, last.id_result))
+                                {
+                                    MessageBox.Show("Результаты занесены");
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Ошибка при занесении результатов");
+                                    break;
+                                }
+
+                            }
                         }
                         else
                         {
@@ -188,8 +203,8 @@ namespace CheckTest.Pages
                     MessageBox.Show("Не все тесты завершены, обнаружена ошибка");
                 }
             }
-            
-            
+
+
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -213,7 +228,7 @@ namespace CheckTest.Pages
                     {
                         Margin = new Thickness()
                         {
-                            Right = 20 
+                            Right = 20
                         }
                     };
                     StackPanel stackPanel1 = new StackPanel();
@@ -290,7 +305,7 @@ namespace CheckTest.Pages
         {
             TestTaskAPI testTask = new TestTaskAPI();
             //Основная часть занесения тестов в бд
-            
+
 
 
             //Првоерка заполнености всех полей
@@ -302,9 +317,9 @@ namespace CheckTest.Pages
                 var OutputPanel = (StackPanel)Panel.Children[1];
                 var InputTextBox = (TextBox)InputPanel.Children[1];
                 var OutputTextBox = (TextBox)OutputPanel.Children[1];
-                if(String.IsNullOrEmpty(InputTextBox.Text)|| String.IsNullOrEmpty(OutputTextBox.Text))
+                if (String.IsNullOrEmpty(InputTextBox.Text) || String.IsNullOrEmpty(OutputTextBox.Text))
                 {
-                    IsNull = true ;
+                    IsNull = true;
                     break;
                 }
             }
@@ -316,6 +331,7 @@ namespace CheckTest.Pages
             //Цикл, в котором пробегаются все тесты
             for (int i = 0; i < AdmTestAdd.Children.Count; i += 2)
             {
+
                 var Panel = (WrapPanel)AdmTestAdd.Children[i];
                 var InputPanel = (StackPanel)Panel.Children[0];
                 var OutputPanel = (StackPanel)Panel.Children[1];
@@ -329,15 +345,19 @@ namespace CheckTest.Pages
                 foreach (var item in StringByteInput)
                 {
                     InputText += item;
+                    InputText += '*';
                 }
+                InputText += StringByteInput.Length; //В конце будте указана длина строки
                 foreach (var item in StringByteOutput)
                 {
                     OutputText += item;
+                    OutputText += '*';
                 }
+                OutputText += StringByteOutput.Length; //В конце будте указана длина строки
 
                 //Занесение теста в базу данных
                 HttpStatusCode status = testTask.PostTestByIdTask(id, InputText, OutputText);
-                if (status==HttpStatusCode.OK)
+                if (status == HttpStatusCode.OK)
                 {
                     MessageBox.Show("Добавление успешно");
                 }
@@ -352,7 +372,7 @@ namespace CheckTest.Pages
         private decimal Average(List<int> list)
         {
             int summ = 0;
-            foreach(int num in list)
+            foreach (int num in list)
             {
                 summ += num;
             }
