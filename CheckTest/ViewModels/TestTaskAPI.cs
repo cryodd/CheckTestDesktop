@@ -12,6 +12,17 @@ namespace CheckTest.ViewModels
 {
     class TestTaskAPI
     {
+        public static List<Tests> GetTestByIdTest(int id_test)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.GetAsync($"http://188.234.244.32:8090/api/tests/{id_test}").Result;
+                var content = response.Content.ReadAsStringAsync();
+                var answer = JsonConvert.DeserializeObject<ResponseAPI<List<Tests>>>(content.Result);
+
+                return answer.Data;
+            }
+        }
         public static List<Tests> GetTestByIdTask(int id_task)
         {
             using (var client = new HttpClient())

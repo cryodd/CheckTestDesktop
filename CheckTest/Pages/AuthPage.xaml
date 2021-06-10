@@ -21,8 +21,7 @@
         <TextBox Grid.Row="2" x:Name="EmailText"></TextBox>
         <PasswordBox Grid.Row="3" x:Name="PassText"></PasswordBox>
         <WrapPanel Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="text2">
-            <Button Margin="0 0 50 0" Click="Button_Click">Войти</Button>
-            <Button>Регистрация</Button>
+            <Button Click="Button_Click">Войти</Button>
         </WrapPanel>
         <TextBlock x:Name="ErrorText" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"></TextBlock>
         <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Visibility="Hidden" x:Name="text3">Вы уже вошли</TextBlock>

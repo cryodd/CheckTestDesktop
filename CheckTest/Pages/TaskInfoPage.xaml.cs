@@ -56,6 +56,13 @@ namespace CheckTest.Pages
                     });
                     if (CurUser.First().Access == 1)
                     {
+                        //Кнопка просмотра высланной работы сравниваемая с эталоном
+                        var butPros = new Button
+                        {
+                            Content = "Просмотр",
+                            FontSize = 28,
+                            Uid = result.id_result.ToString()
+                        };
                         //Кнопка удаления результата, только для админов
                         var but = new Button
                         {
@@ -74,6 +81,8 @@ namespace CheckTest.Pages
                         };
                         but.Click += But_Click;
                         butRed.Click += ButRed_Click;
+                        butPros.Click += ButPros_Click;
+                        panel.Children.Add(butPros);
                         panel.Children.Add(butRed);
                         panel.Children.Add(but);
                     }
@@ -97,6 +106,12 @@ namespace CheckTest.Pages
             }
 
         }
+
+        private void ButPros_Click(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new TestDetailPage(id));
+        }
+
         //Редактирование результата
         private void ButRed_Click(object sender, RoutedEventArgs e)
         {
