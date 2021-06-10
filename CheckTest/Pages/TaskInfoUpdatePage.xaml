@@ -21,7 +21,11 @@
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Grid.Row="2">Описание задания</TextBlock>
         <TextBox Grid.Row="1" HorizontalContentAlignment="Stretch" Height="Auto" Width="Auto" x:Name="NameBox"></TextBox>
         <TextBox Grid.Row="3" HorizontalContentAlignment="Stretch" Height="Auto" Width="Auto" x:Name="DescBox"></TextBox>
-        <Button Click="Button_Click" Grid.Row="4">Редактировать</Button>
+        <WrapPanel Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Click="Button_Click" Margin="0 0 10 0">Редактировать</Button>
+            <Button Click="Button_Click_1">Редактировать тесты</Button>
+        </WrapPanel>
+
         <TextBlock Grid.Row="5" Foreground="Red" HorizontalAlignment="Center" x:Name="ErrorText"></TextBlock>
     </Grid>
 </Page>

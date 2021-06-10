@@ -16,7 +16,7 @@ namespace CheckTest.ViewModels
         {
             using (var client = new HttpClient())
             {
-                HttpResponseMessage response = client.GetAsync($"http://188.234.244.32:8090/api/tests?id_task={id_task}").Result;
+                HttpResponseMessage response = client.GetAsync($"http://188.234.244.32:8090/api/tests/{id_task}").Result;
                 var content = response.Content.ReadAsStringAsync();
                 var answer = JsonConvert.DeserializeObject<ResponseAPI<List<Tests>>>(content.Result);
                 
@@ -38,8 +38,18 @@ namespace CheckTest.ViewModels
             {
                 HttpResponseMessage response = client.DeleteAsync($"http://188.234.244.32:8090/api/tests/{id_task}").Result;
                 return response.IsSuccessStatusCode;
-
+            
             }
         }
+        public static bool PutTestByIdTask(int id_test,int id_task,string test_input, string test_output)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = client.PutAsync($"http://188.234.244.32:8090/tests/{id_test}?test_input={test_input}&test_output={test_output}&id_task={id_task}",null).Result;
+                return response.IsSuccessStatusCode;
+            
+            }
+        }
+
     }
 }

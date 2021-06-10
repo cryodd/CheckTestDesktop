@@ -17,7 +17,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button x:Name="UserAdd" Width="Auto">Добавить пользователя</Button>
+        <Button x:Name="UserAdd" Click="UserAdd_Click" Width="Auto">Добавить пользователя</Button>
         <WrapPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBox Width="300" x:Name="EmailSearchText"></TextBox>
             <Button FontSize="15" Click="Button_Click">Поиск по указанному email</Button>

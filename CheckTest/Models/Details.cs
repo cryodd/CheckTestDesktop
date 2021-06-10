@@ -14,12 +14,20 @@ namespace CheckTest.Models
         public Details Detail(int s, List<string> u)
         {
             string Text = "";
-            foreach (var item in u)
+            string Text1 = "";
+            for (int i = 0; i < u.Count() - 1; i++)
+            {
+                Text1 += u[i];
+                Text1 += "/n";
+            }
+            Text1 += u[ u.Count() - 1];
+            byte[] bt = Encoding.UTF8.GetBytes(Text1);
+            foreach (var item in bt)
             {
                 Text += item;
                 Text += '*';
             }
-            Text += u.Count;
+            Text += bt.Length;
             var det = new Details();
             det.sucsess = s;
             det.user_output = Text;

@@ -48,5 +48,10 @@ namespace CheckTest.Pages
                 ErrorText.Text = "Не все поля заполнены"; //Ошибка
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new TestUpdatePage(id));
+        }
     }
 }

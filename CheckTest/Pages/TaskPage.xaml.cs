@@ -102,10 +102,10 @@ namespace CheckTest.Pages
                 int id = Convert.ToInt32(but.Uid);       
                 if (MessageBox.Show("Вы точно хотите удалить это задание?","Удаление задания", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
-                    //TestTaskAPI.DeleteTestByIdTask(id);
-                    //ProgrammingResultsAPI.DeleteResultByIdTask(id);
+                    TestDetailsAPI.DeleteDetailsByIdTask(id);
                     TasksAPI.DeleteTaskByIdTask(id);
                     this.NavigationService.Navigate(new TaskPage());
+                    
                 }
             }
         }
