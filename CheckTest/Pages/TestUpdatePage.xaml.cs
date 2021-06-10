@@ -33,6 +33,7 @@ namespace CheckTest.Pages
         //Редактирование тестов
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //Проверка на пустые поля
             if (!String.IsNullOrWhiteSpace(InputText.Text) && !String.IsNullOrWhiteSpace(OutputText.Text))
             {
                 //Преобразование строки в байты
@@ -43,7 +44,7 @@ namespace CheckTest.Pages
                 foreach (var item in vs)
                 {
                     InputText1 += item;
-                    InputText1 += '*';
+                    InputText1 += '*'; //Разделитель байтов
                 }
                 InputText1 += vs.Length; //В конце будте указана длина строки
                 foreach (var item in vs1)
@@ -51,7 +52,8 @@ namespace CheckTest.Pages
                     OutputText1 += item;
                     OutputText1 += '*';
                 }
-                OutputText1 += vs1.Length; //В конце будте указана длина строки
+                OutputText1 += vs1.Length; 
+                //Если изменение в бд успешно
                 if(TestTaskAPI.PutTestByIdTask(Convert.ToInt32(CBOX.SelectedValue), id, InputText1, OutputText1))
                 {
                     MessageBox.Show("Успешно");
@@ -73,9 +75,9 @@ namespace CheckTest.Pages
         {
             var a = (ComboBox)sender;
             Console.WriteLine(a.SelectedValue.ToString());
-            var cur = TestTaskAPI.GetTestByIdTask(id).Where(x => x.id_test == Convert.ToInt32(CBOX.SelectedValue));
-            InputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_input));
-            OutputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_output));
+            var cur = TestTaskAPI.GetTestByIdTask(id).Where(x => x.id_test == Convert.ToInt32(CBOX.SelectedValue)); //Все тесты по текущей задаче
+            InputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_input)); //Вывод входных данных
+            OutputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_output)); //Вывод выходных данных
             ButtonSave.IsEnabled = true;
         }
     }

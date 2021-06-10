@@ -62,10 +62,6 @@ namespace CheckTest.ViewModels
                     }
                     
                 }
-                foreach (var item in result)
-                {
-                    Console.WriteLine(item.sucsess.ToString() + item.user_output);
-                }
                 return result;
             }
             catch(Exception e)

@@ -1,19 +1,9 @@
 ﻿using CheckTest.API;
 using CheckTest.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CheckTest.Pages
 {
@@ -22,7 +12,7 @@ namespace CheckTest.Pages
     /// </summary>
     public partial class UsersPage : Page
     {
-        TasksUsers curUser = new TasksUsers();
+        TasksUsers curUser = new TasksUsers(); //Выбранный пользователь
         public UsersPage()
         {
             InitializeComponent();
@@ -31,7 +21,7 @@ namespace CheckTest.Pages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             curUser = AuthAPI.GetUser(EmailSearchText.Text).FirstOrDefault();
-            if ( curUser != null)
+            if (curUser != null)
             {
                 EmailText.Text = curUser.Email;
                 PassText.Text = curUser.Password;
@@ -45,16 +35,19 @@ namespace CheckTest.Pages
 
             }
         }
-
+        //Изменение информации о пользователе
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             string name = NameText.Text;
             string pass = PassText.Text;
             string email = EmailText.Text;
-            if (!String.IsNullOrWhiteSpace(name)&& !String.IsNullOrWhiteSpace(pass) && !String.IsNullOrWhiteSpace(email))
+            //Проверка на пустые поля
+            if (!String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(pass) && !String.IsNullOrWhiteSpace(email))
             {
+                //Если email не был изменен
                 if (email == curUser.Email)
                 {
+                    //Если занесение в бд прошло успешно
                     if (AuthAPI.UpdateByEmail(email, curUser.Email, pass, name, Convert.ToInt32(curUser.Access)))
                     {
                         MessageBox.Show("Успешно");
@@ -64,8 +57,10 @@ namespace CheckTest.Pages
                         MessageBox.Show("Ошибка");
                     }
                 }
-
-                else {
+                //Если email был изменен
+                else
+                {
+                    //Если измененный email уже существует в бд
                     if ((AuthAPI.GetUser(email).FirstOrDefault()) == null)
                     {
                         if (AuthAPI.UpdateByEmail(email, curUser.Email, pass, name, Convert.ToInt32(curUser.Access)))
@@ -83,20 +78,16 @@ namespace CheckTest.Pages
 
                     }
                 }
-                    
-                
-                
             }
             else
             {
                 MessageBox.Show("Не все поля заполнены");
             }
         }
-
+        //Переход на страницу с добавлением пользователей
         private void UserAdd_Click(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new UserAddPage());
-
         }
     }
 }

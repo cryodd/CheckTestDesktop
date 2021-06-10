@@ -36,7 +36,7 @@ namespace CheckTest.Pages
             string result = ResultBox.Text;
             if (!String.IsNullOrWhiteSpace(result) && Convert.ToInt32(result) <= 100)
             {
-                if(ProgrammingResultsAPI.UpdateResultByIdResult(id, Convert.ToInt32(result), current.email, current.id_task))
+                if(ProgrammingResultsAPI.UpdateResultByIdResult(id, Convert.ToInt32(result), current.email, current.id_task)) //Занесение в бд
                 {
                     MessageBox.Show("Успешно");
                 }
@@ -47,10 +47,10 @@ namespace CheckTest.Pages
                 this.Close();
             }
         }
-
+        //Проверка на цифры
         private void ResultBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !(Char.IsDigit(e.Text, 0)); //Проверка на цифры
+            e.Handled = !(Char.IsDigit(e.Text, 0)); 
         }
     }
 }

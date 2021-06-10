@@ -35,9 +35,10 @@ namespace CheckTest.Pages
             AuthAPI obj = new AuthAPI();
             if (obj.GetAuth(login, password))
             {
-                this.NavigationService.Navigate(new TaskPage());
+                this.NavigationService.Navigate(new TaskPage()); //Переход на страницу со всеми задачами
                 ErrorText.Text = "";
             }
+            //Обработка ошибок
             else
             {
                 if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
@@ -50,7 +51,7 @@ namespace CheckTest.Pages
                 }
             }
         }
-
+        //При загрузке страницы
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             //Если пользователь вошел, то для него скрываются все элементы

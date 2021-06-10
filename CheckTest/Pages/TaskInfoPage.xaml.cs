@@ -33,9 +33,10 @@ namespace CheckTest.Pages
             name.Text = item.NameTask;
             desc.Text = item.DescribeTask;
             //Вывод результатов пользователя по текущему заданию
-            if (CurUser != null)
+            if (CurUser != null) //Проверка на то, вошел ли пользователь
             {
-                IEnumerable<ProgrammingResults> ResultList = ProgrammingResultsAPI.GetResult().Where(x => x.id_task == id); //Для админа выводятся все результаты, для пользователя, только его
+                IEnumerable<ProgrammingResults> ResultList = ProgrammingResultsAPI.GetResult().Where(x => x.id_task == id);
+                //Для админа выводятся все результаты, для пользователя, только его
                 if (CurUser.First().Access == 0)
                 {
                     ResultList = ResultList.Where(x => x.email == CurUser.First().Email);
@@ -49,11 +50,13 @@ namespace CheckTest.Pages
                     {
                         name = "от пользователя с email`ом " + result.email;
                     }
+                    //Текст с результатом
                     panel.Children.Add(new TextBlock
                     {
                         Text = IdRes++ + ". Результат " + name + ": " + result.result + "%",
                         FontSize = 28
                     });
+                    //Если пользователь администратор
                     if (CurUser.First().Access == 1)
                     {
                         //Кнопка просмотра высланной работы сравниваемая с эталоном
@@ -61,14 +64,6 @@ namespace CheckTest.Pages
                         {
                             Content = "Просмотр",
                             FontSize = 28,
-                            Uid = result.id_result.ToString()
-                        };
-                        //Кнопка удаления результата, только для админов
-                        var but = new Button
-                        {
-                            Content = "Удалить",
-                            FontSize = 28,
-                            Background = Brushes.Red,
                             Uid = result.id_result.ToString()
                         };
                         //Кнопка редактирования результата
@@ -79,12 +74,10 @@ namespace CheckTest.Pages
                             Background = Brushes.Teal,
                             Uid = result.id_result.ToString()
                         };
-                        but.Click += But_Click;
                         butRed.Click += ButRed_Click;
                         butPros.Click += ButPros_Click;
                         panel.Children.Add(butPros);
                         panel.Children.Add(butRed);
-                        panel.Children.Add(but);
                     }
                     ResultPreview.Children.Add(panel);
                 }
@@ -106,7 +99,7 @@ namespace CheckTest.Pages
             }
 
         }
-
+        //Просмотр результата
         private void ButPros_Click(object sender, RoutedEventArgs e)
         {
             Button but = (Button)sender;
@@ -127,15 +120,7 @@ namespace CheckTest.Pages
         {
             this.NavigationService.Navigate(new TaskInfoPage(id));
         }
-
-        //Удаление результата
-        private void But_Click(object sender, RoutedEventArgs e)
-        {
-            Button but = (Button)sender;
-            ProgrammingResultsAPI.DeleteResultByIdResult(Convert.ToInt32(but.Uid));
-            this.NavigationService.Navigate(new TaskInfoPage(id));
-        }
-
+        //Считывание текста из файла
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Чтение файла
@@ -155,13 +140,14 @@ namespace CheckTest.Pages
                 MessageBox.Show("Файл не выбран");
             }
         }
-
+        //Тестирование файла
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //Создание компилируемого файла
 
             Compiler compiler = new Compiler();
-            var result = compiler.Compile(programText.Text);
+            var result = compiler.Compile(programText.Text); //Компиляция программы
+            //Если есть ошибки
             if (result.HasErrors)
             {
                 foreach (CompilerError item in result)
@@ -173,35 +159,45 @@ namespace CheckTest.Pages
             else
             {
                 MessageBox.Show("Компиляция прошла успешно");
-                List<Details> det = compiler.Test(id);//Тестирование
-                List<int> grade = new List<int>();
-
+                List<Details> det = compiler.Test(id);  //Тестирование
+                List<int> grade = new List<int>(); //Список со всеми баллами за тесты
+                //Если тестирование не выявило ошибок
                 if (det != null)
                 {
+                    //Добавление баллов в список
                     foreach (var item in det)
                     {
                         grade.Add(item.sucsess);
                     }
                     int gr = Convert.ToInt32(Math.Round(Average(grade) * 100)); //Средний балл
                     MessageBox.Show("Все тесты завершены, ваш балл = " + gr);
-                    if (Guy.CurrentUser != null) //Если вдруг сюда попал неавторизированный пользователь
+                    //Если Пользователь авторизован
+                    if (Guy.CurrentUser != null) 
                     {
+                        //Если занесение в БД информации о результате прошло успешно
                         if (ProgrammingResultsAPI.PostResult(id, Guy.CurrentUser.First().Email, gr))
                         {
+                            bool suc = true;
                             var last = ProgrammingResultsAPI.GetResult().Last();
+                            //Занесение детальной информации в бд
                             foreach (var item in det)
                             {
                                 if (TestDetailsAPI.PostDetails(item.id_test, item.user_output, item.sucsess, last.id_result))
                                 {
-                                    MessageBox.Show("Результаты занесены");
+                                    
 
                                 }
                                 else
                                 {
+                                    suc = false;
                                     MessageBox.Show("Ошибка при занесении результатов");
                                     break;
                                 }
 
+                            }
+                            if (suc)
+                            {
+                                MessageBox.Show("Результаты занесены");
                             }
                         }
                         else
@@ -222,12 +218,12 @@ namespace CheckTest.Pages
 
 
         }
-
+        //Проверка на цифры
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !(Char.IsDigit(e.Text, 0)); //Проверка на цифры
+            e.Handled = !(Char.IsDigit(e.Text, 0)); 
         }
-
+        //Добавление полей для создания тестов
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             //Проверка на заполненность поля
@@ -248,6 +244,7 @@ namespace CheckTest.Pages
                         }
                     };
                     StackPanel stackPanel1 = new StackPanel();
+                    // "Ввод"
                     stackPanel.Children.Add(new TextBlock()
                     {
                         Text = "Ввод",
@@ -255,6 +252,7 @@ namespace CheckTest.Pages
                         HorizontalAlignment = HorizontalAlignment.Center,
                         FontSize = 15
                     });
+                    //Поле для ввода входных значений
                     stackPanel.Children.Add(new TextBox()
                     {
                         Height = 200,
@@ -269,6 +267,7 @@ namespace CheckTest.Pages
                         FontSize = 15,
                         VerticalScrollBarVisibility = ScrollBarVisibility.Auto
                     });
+                    // "Вывод"
                     stackPanel1.Children.Add(new TextBlock()
                     {
                         Text = "Вывод",
@@ -276,6 +275,7 @@ namespace CheckTest.Pages
                         FontSize = 15,
                         HorizontalAlignment = HorizontalAlignment.Center
                     });
+                    //Поле для выходных входных значений
                     stackPanel1.Children.Add(new TextBox()
                     {
                         Height = 200,
@@ -292,7 +292,7 @@ namespace CheckTest.Pages
                     panel.Children.Add(stackPanel);
                     panel.Children.Add(stackPanel1);
                     AdmTestAdd.Children.Add(panel);
-
+                    //Линия, разделяющая тесты
                     AdmTestAdd.Children.Add(new Line()
                     {
                         X1 = 10,
@@ -316,23 +316,21 @@ namespace CheckTest.Pages
                 }
             }
         }
-
+        //Занесение тестов в бд
         private void TestSaveButton_Click(object sender, RoutedEventArgs e)
         {
             TestTaskAPI testTask = new TestTaskAPI();
-            //Основная часть занесения тестов в бд
-
-
-
             //Првоерка заполнености всех полей
             bool IsNull = false;
+            //Цикл, которвый пробегает через все поля с занесенем тестов
             for (int i = 0; i < AdmTestAdd.Children.Count; i += 2)
             {
                 var Panel = (WrapPanel)AdmTestAdd.Children[i];
                 var InputPanel = (StackPanel)Panel.Children[0];
                 var OutputPanel = (StackPanel)Panel.Children[1];
-                var InputTextBox = (TextBox)InputPanel.Children[1];
-                var OutputTextBox = (TextBox)OutputPanel.Children[1];
+                var InputTextBox = (TextBox)InputPanel.Children[1]; // Поле со входными данными 
+                var OutputTextBox = (TextBox)OutputPanel.Children[1]; // Поле о выходными данными 
+                //Если хотя бы одно поле не будет содержать значений, выводит ошибку
                 if (String.IsNullOrEmpty(InputTextBox.Text) || String.IsNullOrEmpty(OutputTextBox.Text))
                 {
                     IsNull = true;
@@ -351,23 +349,23 @@ namespace CheckTest.Pages
                 var Panel = (WrapPanel)AdmTestAdd.Children[i];
                 var InputPanel = (StackPanel)Panel.Children[0];
                 var OutputPanel = (StackPanel)Panel.Children[1];
-                var InputTextBox = (TextBox)InputPanel.Children[1];
-                var OutputTextBox = (TextBox)OutputPanel.Children[1];
-                byte[] StringByteInput = Encoding.UTF8.GetBytes(InputTextBox.Text);
-                byte[] StringByteOutput = Encoding.UTF8.GetBytes(OutputTextBox.Text);
-                string InputText = "";
-                string OutputText = "";
+                var InputTextBox = (TextBox)InputPanel.Children[1];// Поле со входными данными 
+                var OutputTextBox = (TextBox)OutputPanel.Children[1];// Поле о выходными данными 
+                byte[] StringByteInput = Encoding.UTF8.GetBytes(InputTextBox.Text); //Байтовое представление строки
+                byte[] StringByteOutput = Encoding.UTF8.GetBytes(OutputTextBox.Text);//Байтовое представление строки
+                string InputText = ""; //Строчное представление байтов
+                string OutputText = ""; //Строчное представление байтов
                 //Приведение byte в sting 
                 foreach (var item in StringByteInput)
                 {
                     InputText += item;
-                    InputText += '*';
+                    InputText += '*'; //Разделитель байтов
                 }
                 InputText += StringByteInput.Length; //В конце будте указана длина строки
                 foreach (var item in StringByteOutput)
                 {
                     OutputText += item;
-                    OutputText += '*';
+                    OutputText += '*'; //Разделитель байтов
                 }
                 OutputText += StringByteOutput.Length; //В конце будте указана длина строки
 

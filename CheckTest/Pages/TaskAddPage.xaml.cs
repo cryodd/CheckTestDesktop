@@ -30,7 +30,7 @@ namespace CheckTest.Pages
         {
             string name = NameBox.Text;
             string desc = DescBox.Text;
-            if (!String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(desc))
+            if (!String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(desc)) //Добавление в бд
             {
                 if (TasksAPI.PostTask(name, desc))
                 {

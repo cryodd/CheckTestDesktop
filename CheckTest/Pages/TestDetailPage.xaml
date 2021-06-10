@@ -23,15 +23,15 @@
             <ComboBox x:Name="TaskIdBox" Height="30" Width="150" SelectionChanged="TaskIdBox_SelectionChanged"></ComboBox>
         </StackPanel>
         <ScrollViewer Grid.Row="2">
-            <TextBlock FontSize="32" x:Name="programText1" Background="AntiqueWhite">
+            <TextBlock FontSize="32" x:Name="programText1" Width="auto" TextWrapping="Wrap" Background="AntiqueWhite">
             </TextBlock>
         </ScrollViewer>
         <ScrollViewer Grid.Row="2" Grid.Column="1">
-            <TextBlock FontSize="32" x:Name="programText2" Background="AntiqueWhite">
+            <TextBlock FontSize="32" x:Name="programText2" Width="auto" TextWrapping="Wrap" Background="AntiqueWhite">
             </TextBlock>
         </ScrollViewer>
         <ScrollViewer Grid.Row="2" Grid.Column="2">
-            <TextBlock FontSize="32" x:Name="programText3" Background="AntiqueWhite">
+            <TextBlock FontSize="32" x:Name="programText3" Width="auto" TextWrapping="Wrap" Background="AntiqueWhite">
             </TextBlock>
         </ScrollViewer>
         <TextBlock Grid.Row="1" FontSize="20" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Вывод пользоватея</TextBlock>

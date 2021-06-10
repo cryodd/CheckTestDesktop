@@ -1,34 +1,33 @@
-﻿using System;
+﻿using CheckTest.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Windows;
-using CheckTest.Models;
 
 namespace CheckTest.ViewModels
 {
     class TestTask
     {
         string dir = "comp/test"; //Рабочая директория
-        int id_task;
-        string proc_path,input_path,output_path,etalon,line;
+        int id_task; //Номер задания
+        string proc_path, input_path, output_path, line;
         List<string> lineMass = new List<string>();
         Details det = new Details();
-        public TestTask(int id,string path)
+        public TestTask(int id, string path)
         {
             id_task = id; //Номер задачи
             proc_path = path; //Путь исполняемого файл
-            input_path = dir + "/input";
-            output_path = dir +"/output";
-            etalon = dir + "/etalon";
-            
+            input_path = dir + "/input"; //Входной файл
+            output_path = dir + "/output"; //Выходной файл
+
         }
         //Проверка
         public Details Check(byte[] EtalonByte)
         {
+            //Процесс
             using (Process proc = new Process())
             {
                 try
@@ -36,8 +35,9 @@ namespace CheckTest.ViewModels
                     proc.StartInfo.FileName = proc_path;
                     proc.StartInfo.RedirectStandardOutput = true;
                     proc.StartInfo.RedirectStandardInput = true;
+                    proc.StartInfo.RedirectStandardError = true;
                     proc.StartInfo.UseShellExecute = false;
-                    proc.Start();
+                    proc.Start(); //Запуск процесса
                     //Запись исходных данных во входной файл
                     using (StreamReader streamReader = new StreamReader(input_path))
                     {
@@ -46,19 +46,35 @@ namespace CheckTest.ViewModels
                             proc.StandardInput.WriteLine(line);
                         }
                     }
-                    proc.StandardInput.Close(); //Закрывает ввод, на случай если количество строк ввода пользователя не совпадает с тестовым
-                    //Удаление файла с выходными данными
-                    File.Delete(output_path);
-                    //Удаление массива с выходными данными
-                    lineMass.Clear();
+                    if (!proc.WaitForExit(500))
+                    {
+                        if (proc.StandardError != null)
+                        {
+                            List<string> err = new List<string>();
+                            string otem,str;
+                            while ((otem = proc.StandardError.ReadLine()) != null)
+                            {
+                                byte[] vs1 = Encoding.GetEncoding(20866).GetBytes(otem);
+                                byte[] vs = Encoding.Convert(Encoding.GetEncoding(20866), Encoding.UTF8, vs1);
+                                str = Encoding.UTF8.GetString(vs);
+                                err.Add(str);
+                            }
+                            proc.Dispose();
+                            return det.Detail(0, err);
+                        }
+                        proc.Dispose();
+                        lineMass = new List<string>();
+                        lineMass.Add("Ошибка в программе");
+                        return det.Detail(0, lineMass);
+                    }
+                    File.Delete(output_path); //Удаление файла с выходными данными
+                    lineMass.Clear(); //Удаление массива с выходными данными
                     //Запись выходных данных в файл
                     using (StreamWriter streamWriter = new StreamWriter(output_path))
                     {
-                        var a = proc.StandardOutput.EndOfStream;
+                        var a = proc.StandardOutput.EndOfStream; //Проверка, есть ли выходные данные
                         if (!a)
                         {
-                            
-
                             while ((line = proc.StandardOutput.ReadLine()) != null)
                             {
                                 lineMass.Add(line);
@@ -68,22 +84,38 @@ namespace CheckTest.ViewModels
                             {
                                 streamWriter.WriteLine(lineMass[i]);
                             }
-                             streamWriter.Write(lineMass[lineMass.Count() - 1]);
+                            streamWriter.Write(lineMass[lineMass.Count() - 1]);
                         }
                         else
                         {
                             proc.StandardOutput.Close();
                             proc.WaitForExit();
-                            return det.Detail(0,lineMass);
+                            lineMass = new List<string>();
+                            lineMass.Add("Ошибка в программе");
+                            return det.Detail(0, lineMass);
                         }
                     }
-                    proc.WaitForExit();
+                    proc.StandardInput.Close(); //Закрывает ввод, на случай если количество строк ввода пользователя не совпадает с тестовым
+                    if (proc.StandardError != null)
+                    {
+                        List<string> err = new List<string>();
+                        string otem, str;
+                        while ((otem = proc.StandardError.ReadLine()) != null)
+                        {
+                            byte[] vs1 = Encoding.GetEncoding(20866).GetBytes(otem);
+                            byte[] vs = Encoding.Convert(Encoding.GetEncoding(20866), Encoding.UTF8, vs1);
+                            str = Encoding.UTF8.GetString(vs);
+                            err.Add(str);
+                        }
+                        proc.Dispose();
+                        return det.Detail(0, err);
+                    }
+                    proc.WaitForExit(); //Ожидание завершения файла
+                    
                     //Проверка совпадения эталона и выходных данных
                     if (FileEquals(output_path, EtalonByte))
                     {
                         return det.Detail(1, lineMass);
-
-
                     }
                     else
                     {
@@ -93,7 +125,7 @@ namespace CheckTest.ViewModels
                 }
                 catch (Exception e)
                 {
-                    proc.Kill();
+                    proc.Dispose();
                     MessageBox.Show(e.Message); //Вывод ошибки
                     return det.Detail(2, null);
 
@@ -124,12 +156,12 @@ namespace CheckTest.ViewModels
         public static byte[] StringToByte(string StringByte)
         {
             string[] vs = StringByte.Split('*');
-            byte[] result = new byte[Convert.ToInt32(vs[vs.Length-1])];
-            
+            byte[] result = new byte[Convert.ToInt32(vs[vs.Length - 1])];
+
             //Преобразование
-            for (int i = 0; i < vs.Length-1; i++)
+            for (int i = 0; i < vs.Length - 1; i++)
             {
-                
+
                 result[i] = Convert.ToByte(vs[i]);
             };
             return result;

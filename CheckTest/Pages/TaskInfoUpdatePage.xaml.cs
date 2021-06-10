@@ -21,7 +21,7 @@ namespace CheckTest.Pages
     /// </summary>
     public partial class TaskInfoUpdatePage : Page
     {
-        int id;
+        int id; //Номер задания
         public TaskInfoUpdatePage(int id_task)
         {
             InitializeComponent();
@@ -35,6 +35,7 @@ namespace CheckTest.Pages
         {
             string name = NameBox.Text;
             string desc = DescBox.Text;
+            //Проверка на пустые поля
             if (!String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(desc))
             {
                 if (TasksAPI.UpdateTaskByIdTask(id,name, desc))
@@ -48,7 +49,7 @@ namespace CheckTest.Pages
                 ErrorText.Text = "Не все поля заполнены"; //Ошибка
             }
         }
-
+        //Переход на старницу с редактированием тестов
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new TestUpdatePage(id));

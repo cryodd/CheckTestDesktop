@@ -33,22 +33,29 @@ namespace CheckTest.Pages
             string pass = PassText.Text;
             string pass2 = PassText1.Text;
             string name = NameText.Text;
+            //Проверка на пустые поля
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(name))
             {
                 ErrorText.Text = "Не все поля введены";
             }
             else
             {
+                //Проверка на совпадение паролей
                 if (pass != pass2 || pass2 != pass)
                 {
                     ErrorText.Text = "Пароли не совпадают";
                 }
                 else
                 {
+                    //Регистрация
                     if (obj.PostReg(email, pass, name))
                     {
                         MessageBox.Show("Зарегистрированно");
-                        this.NavigationService.Navigate(new TaskPage());
+                        this.NavigationService.Navigate(new TaskPage()); //Переход на страницу со всеми задачами
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка");
                     }
                 }
             }

@@ -28,7 +28,7 @@ namespace CheckTest.Pages
             //Вывод всех заданий
             foreach(var item in TasksAPI.GetTasksList())
             {
-
+                //Название задачи
                 FGG.Children.Add(new TextBlock()
                 {
                     Text = "№ "+ item.IdTask + ". " + item.NameTask,
@@ -41,6 +41,7 @@ namespace CheckTest.Pages
                         Bottom = 20
                     }
                 });
+                //Описание задачи
                 FGG.Children.Add(new TextBlock()
                 {
                     Text = item.DescribeTask,
@@ -51,15 +52,18 @@ namespace CheckTest.Pages
                         Bottom = 20
                     }
                 });
-                var but = new Button() //Кнопка перехода к заданию
+                //Кнопка перехода к заданию
+                var but = new Button() 
                 {
                     Content = "Перейти к заданию",
                     Uid = item.IdTask.ToString()
                 };
                 but.Click += but_click;
-                if (Guy.CurrentUser != null)//Проверка вошел ли пользователь(на всякий случай)
+                //Проверка вошел ли пользователь(на всякий случай)
+                if (Guy.CurrentUser != null)
                 {
-                    if (Guy.CurrentUser.First().Access == 1)//Проверка того, что пользователь - это администратор
+                    //Проверка того, что пользователь - это администратор
+                    if (Guy.CurrentUser.First().Access == 1)
                     {
                         var butDelete = new Button() //Кнопка удаления задания
                         {
@@ -80,6 +84,7 @@ namespace CheckTest.Pages
                     }
                 }
                 FGG.Children.Add(but);
+                //Разделяющая линия
                 FGG.Children.Add(new Line()
                 {
                     X1 = 10,
@@ -91,25 +96,28 @@ namespace CheckTest.Pages
                     VerticalAlignment = VerticalAlignment.Center
                 });
             }
-            void but_click(object sender, RoutedEventArgs e) //Переход на страницу с заданием
+            //Переход на страницу с заданием
+            void but_click(object sender, RoutedEventArgs e) 
             {
                 var but = (Button)sender;
                 this.NavigationService.Navigate(new TaskInfoPage(Convert.ToInt32(but.Uid)));
             }
-            void butDelete_click(object sender, RoutedEventArgs e)//Удаление задания
+            //Удаление задания
+            void butDelete_click(object sender, RoutedEventArgs e)
             {
                 var but = (Button)sender;
-                int id = Convert.ToInt32(but.Uid);       
+                int id = Convert.ToInt32(but.Uid); 
+                //Подтверждение удаления
                 if (MessageBox.Show("Вы точно хотите удалить это задание?","Удаление задания", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
-                    TestDetailsAPI.DeleteDetailsByIdTask(id);
+                    TestDetailsAPI.DeleteDetailsByIdTask(id); //Удаление
                     TasksAPI.DeleteTaskByIdTask(id);
                     this.NavigationService.Navigate(new TaskPage());
                     
                 }
             }
         }
-
+        //Редактирование задания
         private void ButRed_Click(object sender, RoutedEventArgs e)
         {
             var but = (Button)sender;
