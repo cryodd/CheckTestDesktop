@@ -109,7 +109,8 @@ namespace CheckTest.Pages
 
         private void ButPros_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new TestDetailPage(id));
+            Button but = (Button)sender;
+            this.NavigationService.Navigate(new TestDetailPage(Convert.ToInt32(but.Uid)));
         }
 
         //Редактирование результата

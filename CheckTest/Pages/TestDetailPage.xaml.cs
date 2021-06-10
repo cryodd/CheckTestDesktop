@@ -23,28 +23,30 @@ namespace CheckTest.Pages
     public partial class TestDetailPage : Page
     {
         int id = 0;
+        int id_task;
         public TestDetailPage(int id_result)
         {
             InitializeComponent();
             id = id_result;
-            TaskIdBox.ItemsSource = TestTaskAPI.GetTestByIdTest(id_result);
+            id_task = ProgrammingResultsAPI.GetResultByIdResult(id).id_task;
+            TaskIdBox.ItemsSource = TestTaskAPI.GetTestByIdTest(id_task);
             TaskIdBox.DisplayMemberPath = "id_test";
-            TaskIdBox.SelectedItem = "id_test";
+            TaskIdBox.SelectedValuePath = "id_test";
         }
-
+        //Вывод информации при изменении номера теста
         private void TaskIdBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var a = (ComboBox)sender;
-            Console.WriteLine(a.SelectedValue.ToString());
-            var cur = TestTaskAPI.GetTestByIdTask(id);
+            var cur = TestTaskAPI.GetTestByIdTask(id_task);
             var cut = cur.Where(x => x.id_test == Convert.ToInt32(TaskIdBox.SelectedValue));
             var k = TestDetailsAPI.GetDetails();
-            var kk = k.Where(x => x.id_test == Convert.ToInt32(a.SelectedValue));
-            var c = kk.Where(x => x.id_result == id);
-            var kkk = c.First().user_output;
+            var kk = k.Where(x => x.id_test == Convert.ToInt32(a.SelectedValue) && x.id_result == id);
+           // var c = kk.Where(x => x.id_result == id);
+            var kkk = kk.First().user_output;
             programText1.Text = Encoding.UTF8.GetString(TestTask.StringToByte(kkk));
-            programText2.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_input));
-            programText3.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_output));
+
+            programText2.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cut.FirstOrDefault().test_input));
+            programText3.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cut.FirstOrDefault().test_output));
         }
     }
 }
