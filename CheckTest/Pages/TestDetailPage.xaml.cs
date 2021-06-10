@@ -29,7 +29,7 @@ namespace CheckTest.Pages
             id = id_result;
             TaskIdBox.ItemsSource = TestTaskAPI.GetTestByIdTest(id_result);
             TaskIdBox.DisplayMemberPath = "id_test";
-            TaskIdBox.SelectedItem = "id_test";
+            TaskIdBox.SelectedValuePath = "id_test";
         }
 
         private void TaskIdBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,11 +38,7 @@ namespace CheckTest.Pages
             Console.WriteLine(a.SelectedValue.ToString());
             var cur = TestTaskAPI.GetTestByIdTask(id);
             var cut = cur.Where(x => x.id_test == Convert.ToInt32(TaskIdBox.SelectedValue));
-            var k = TestDetailsAPI.GetDetails();
-            var kk = k.Where(x => x.id_test == Convert.ToInt32(a.SelectedValue));
-            var c = kk.Where(x => x.id_result == id);
-            var kkk = c.First().user_output;
-            programText1.Text = Encoding.UTF8.GetString(TestTask.StringToByte(kkk));
+            programText1.Text = Encoding.UTF8.GetString(TestTask.StringToByte(TestDetailsAPI.GetDetails().Where(x => x.id_test == Convert.ToInt32(a.SelectedValue)).Where(x => x.id_result == id).First().user_output));
             programText2.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_input));
             programText3.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_output));
         }
