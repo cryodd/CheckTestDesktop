@@ -23,7 +23,9 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="name" FontSize="25" HorizontalAlignment="Center" FontWeight="Bold" Foreground="Brown" TextWrapping="Wrap" Grid.ColumnSpan="2"></TextBlock>
-        <TextBlock x:Name="desc" FontSize="18" Grid.Row="1" FontStyle="Italic" FontWeight="Bold" Foreground="SaddleBrown" TextWrapping="Wrap" Grid.ColumnSpan="2"></TextBlock>
+        <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="desc" FontSize="18" FontStyle="Italic" FontWeight="Bold" Foreground="SaddleBrown" TextWrapping="Wrap" ></TextBlock>
+        </ScrollViewer>
         <ScrollViewer Grid.RowSpan="2" Grid.Row="2">
             <TextBlock FontSize="10" x:Name="programText" Background="AntiqueWhite">
             </TextBlock>

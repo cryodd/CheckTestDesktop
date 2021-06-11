@@ -35,7 +35,6 @@ namespace CheckTest.ViewModels
                     proc.StartInfo.FileName = proc_path;
                     proc.StartInfo.RedirectStandardOutput = true;
                     proc.StartInfo.RedirectStandardInput = true;
-                    proc.StartInfo.RedirectStandardError = true;
                     proc.StartInfo.UseShellExecute = false;
                     proc.Start(); //Запуск процесса
                     //Запись исходных данных во входной файл
@@ -46,22 +45,10 @@ namespace CheckTest.ViewModels
                             proc.StandardInput.WriteLine(line);
                         }
                     }
-                    if (!proc.WaitForExit(500))
+                    proc.StandardInput.Close();//Закрывает ввод, на случай если количество строк ввода пользователя не совпадает с тестовым
+                    if (!proc.WaitForExit(300))
                     {
-                        if (proc.StandardError != null)
-                        {
-                            List<string> err = new List<string>();
-                            string otem,str;
-                            while ((otem = proc.StandardError.ReadLine()) != null)
-                            {
-                                byte[] vs1 = Encoding.GetEncoding(20866).GetBytes(otem);
-                                byte[] vs = Encoding.Convert(Encoding.GetEncoding(20866), Encoding.UTF8, vs1);
-                                str = Encoding.UTF8.GetString(vs);
-                                err.Add(str);
-                            }
-                            proc.Dispose();
-                            return det.Detail(0, err);
-                        }
+                       
                         proc.Dispose();
                         lineMass = new List<string>();
                         lineMass.Add("Ошибка в программе");
@@ -95,22 +82,9 @@ namespace CheckTest.ViewModels
                             return det.Detail(0, lineMass);
                         }
                     }
-                    proc.StandardInput.Close(); //Закрывает ввод, на случай если количество строк ввода пользователя не совпадает с тестовым
-                    if (proc.StandardError != null)
-                    {
-                        List<string> err = new List<string>();
-                        string otem, str;
-                        while ((otem = proc.StandardError.ReadLine()) != null)
-                        {
-                            byte[] vs1 = Encoding.GetEncoding(20866).GetBytes(otem);
-                            byte[] vs = Encoding.Convert(Encoding.GetEncoding(20866), Encoding.UTF8, vs1);
-                            str = Encoding.UTF8.GetString(vs);
-                            err.Add(str);
-                        }
-                        proc.Dispose();
-                        return det.Detail(0, err);
-                    }
-                    proc.WaitForExit(); //Ожидание завершения файла
+                    proc.StandardOutput.Close();
+                    proc.StandardInput.Close();//Закрывает ввод, на случай если количество строк ввода пользователя не совпадает с тестовым
+                    proc.Dispose(); //Ожидание завершения файла
                     
                     //Проверка совпадения эталона и выходных данных
                     if (FileEquals(output_path, EtalonByte))
@@ -126,8 +100,9 @@ namespace CheckTest.ViewModels
                 catch (Exception e)
                 {
                     proc.Dispose();
-                    MessageBox.Show(e.Message); //Вывод ошибки
-                    return det.Detail(2, null);
+                    List<string> vs = new List<string>();
+                    vs.Add(e.Message);//Вывод ошибки
+                    return det.Detail(0, vs);
 
                 }
             }
@@ -137,7 +112,6 @@ namespace CheckTest.ViewModels
         static bool FileEquals(string path, byte[] bytes)
         {
             byte[] file1 = File.ReadAllBytes(path);
-            Console.WriteLine(Encoding.UTF8.GetString(bytes));
             if (file1.Length == bytes.Length)
             {
                 for (int i = 0; i < file1.Length; i++)

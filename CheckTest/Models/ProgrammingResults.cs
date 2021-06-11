@@ -12,5 +12,6 @@ namespace CheckTest.Models
         public string email { get; set; }
         public int id_task { get; set; }
         public int result { get; set; }
+        public DateTime dateTime { get; set; }
     }
 }

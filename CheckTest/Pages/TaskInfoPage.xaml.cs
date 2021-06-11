@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -53,9 +54,10 @@ namespace CheckTest.Pages
                     //Текст с результатом
                     panel.Children.Add(new TextBlock
                     {
+                        TextWrapping = TextWrapping.Wrap,
                         Text = IdRes++ + ". Результат " + name + ": " + result.result + "%",
                         FontSize = 28
-                    });
+                    }) ;
                     //Если пользователь администратор
                     if (CurUser.First().Access == 1)
                     {

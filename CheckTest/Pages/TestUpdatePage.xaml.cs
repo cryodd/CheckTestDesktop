@@ -74,7 +74,6 @@ namespace CheckTest.Pages
         private void CBOX_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var a = (ComboBox)sender;
-            Console.WriteLine(a.SelectedValue.ToString());
             var cur = TestTaskAPI.GetTestByIdTask(id).Where(x => x.id_test == Convert.ToInt32(CBOX.SelectedValue)); //Все тесты по текущей задаче
             InputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_input)); //Вывод входных данных
             OutputText.Text = Encoding.UTF8.GetString(TestTask.StringToByte(cur.FirstOrDefault().test_output)); //Вывод выходных данных
